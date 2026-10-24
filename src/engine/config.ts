@@ -17,3 +17,9 @@ export const DIFFICULTIES = {
 } as const;
 export const CAR_COLORS = ["#b5ef63", "#70cfff", "#ff967b", "#d0a1ff"] as const;
 export const TOTAL_DISTANCE = RACE.lapLength * RACE.laps;
+
+export const LAP_OPTIONS = [3, 5, 10] as const;
+export type LapCount = (typeof LAP_OPTIONS)[number];
+export const raceDistance = (laps: LapCount) => RACE.lapLength * laps;
+export const sequenceLength = (laps: LapCount) =>
+  Math.ceil((RACE.sequenceLength * laps) / RACE.laps);

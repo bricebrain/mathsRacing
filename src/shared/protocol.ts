@@ -1,10 +1,11 @@
-import type { CAR_COLORS } from "../engine/config";
+import type { CAR_COLORS, LapCount } from "../engine/config";
 import type { Racer } from "../engine/race";
-import type { Operation } from "../engine/math";
+import type { GameMode, Question } from "../engine/questions";
 export type PlayerId = 0 | 1;
 export type Phase = "lobby" | "countdown" | "racing" | "finished";
 export type PublicRacer = Omit<Racer, "reviewIds" | "lastAttempt">;
 export interface DisplayRace {
+  laps: LapCount;
   players: [PublicRacer, PublicRacer];
   time: number;
   winner: number | null;
@@ -18,10 +19,11 @@ export interface MemberView {
   connected: boolean;
 }
 export interface Review {
-  operation: Operation;
-  answer: number;
+  operation: Question;
+  answer: number | string;
 }
 export interface RoomView {
+  mode: GameMode;
   code: string;
   selfId: PlayerId;
   raceId: string | null;
@@ -31,7 +33,7 @@ export interface RoomView {
   phase: Phase;
   members: MemberView[];
   state: DisplayRace;
-  question: Operation | null;
+  question: Question | null;
   review: Review[];
   reason: "finish" | "forfeit" | "interrupted" | null;
 }
@@ -50,6 +52,8 @@ export type ClientAction =
   | { type: "auth"; token: string; clientId: string; takeover?: boolean }
   | { type: "ping"; sentAt: number }
   | { type: "ready"; ready: boolean }
+  | { type: "laps"; laps: LapCount }
+  | { type: "mode"; mode: GameMode }
   | { type: "color"; color: CarColor }
   | { type: "rematch"; ready: boolean }
   | ({ type: "answer"; value: string } & RaceAction)

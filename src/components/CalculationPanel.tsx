@@ -1,7 +1,8 @@
 import { DIFFICULTIES, RACE } from "../engine/config";
 import { boostAt, skipRemaining } from "../engine/race";
 import type { DisplayRace } from "../shared/protocol";
-import type { Operation } from "../engine/math";
+import { isCapital, type Question } from "../engine/questions";
+import { CapitalChoices } from "./CapitalChoices";
 import { Keypad } from "./Keypad";
 export function CalculationPanel({
   state,
@@ -11,16 +12,20 @@ export function CalculationPanel({
   active,
   onKey,
   onSkip,
+  onChoose,
 }: {
   state: DisplayRace;
-  operation: Operation | null;
+  operation: Question | null;
   input: string;
   feedback: string;
   active: boolean;
   onKey: (key: string) => void;
   onSkip: () => void;
+  onChoose: (index: number) => void;
 }) {
   const player = state.players[0];
+  const capital = operation && isCapital(operation) ? operation : null;
+  const calculation = operation && !isCapital(operation) ? operation : null;
   const difficulty = DIFFICULTIES[operation?.difficulty ?? "veryEasy"],
     turbo = boostAt(player, state.time);
   const remaining = Math.max(
@@ -39,16 +44,18 @@ export function CalculationPanel({
           <i /> {difficulty.label}
         </span>
       </div>
-      <div className="question">
+      {capital ? (
+        <CapitalChoices question={capital} active={active} onChoose={onChoose} />
+      ) : <div className="question">
         <span>
-          {operation?.a ?? "—"} <em>{operation?.operator ?? "+"}</em>{" "}
-          {operation?.b ?? "—"}
+          {calculation?.a ?? "—"} <em>{calculation?.operator ?? "+"}</em>{" "}
+          {calculation?.b ?? "—"}
         </span>
         <span className="equals">=</span>
         <output aria-label="Réponse saisie">
           {input || <span className="input-caret">?</span>}
         </output>
-      </div>
+      </div>}
       <div className="answer-actions">
         <div className="answer-feedback" aria-live="polite">
           {feedback === "correct" ? (
@@ -56,7 +63,7 @@ export function CalculationPanel({
           ) : feedback === "wrong" ? (
             "Presque ! Essaie encore."
           ) : feedback === "skipped" ? (
-            "Calcul passé, sans nouveau turbo."
+            "Question passée, sans nouveau turbo."
           ) : feedback === "pending" ? (
             "Validation…"
           ) : feedback === "ignored" ? (
@@ -72,12 +79,12 @@ export function CalculationPanel({
           className="skip-button"
           onClick={onSkip}
           disabled={!active || skipWait > 0}
-          title="Passer après 8 secondes, sans nouveau boost. Le calcul sera à revoir à l’arrivée."
+          title="Passer après 8 secondes, sans nouveau boost. La question sera à revoir à l’arrivée."
         >
           {skipWait > 0 ? `Passer · ${skipWait} s` : "Passer →"}
         </button>
       </div>
-      <Keypad onKey={onKey} disabled={!active} />
+      {!capital && <Keypad onKey={onKey} disabled={!active} />}
       <div className={`turbo-gauge ${turbo ? "boosting" : ""}`}>
         <div>
           <span>ϟ TURBO {turbo ? "ACTIF" : "EN ATTENTE"}</span>
@@ -105,7 +112,8 @@ export function CalculationPanel({
         </span>
       </div>
       <p className="keyboard-hint">
-        Clavier : chiffres · Entrée pour valider · ⌫ pour effacer
+        {capital ? "Choisis une capitale · Clavier : touches 1 à 4"
+          : "Clavier : chiffres · Entrée pour valider · ⌫ pour effacer"}
       </p>
     </section>
   );

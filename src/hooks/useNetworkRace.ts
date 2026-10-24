@@ -1,3 +1,5 @@
+import type { LapCount } from "../engine/config";
+import type { GameMode } from "../engine/questions";
 import { useEffect, useRef, useState } from "react";
 import { emptyRace } from "../shared/display";
 import type { CarColor, DisplayRace, Phase, Session } from "../shared/protocol";
@@ -78,6 +80,8 @@ export function useNetworkRace(session: Session | null) {
         Math.ceil(((room.view?.startsAt ?? serverNow) - serverNow) / 1000),
       ),
     ),
+    setLaps: (laps: LapCount) => room.send({ type: "laps", laps }),
+    setMode: (mode: GameMode) => room.send({ type: "mode", mode }),
     setColor: (color: string) =>
       room.send({ type: "color", color: color as CarColor }),
     ready: () => room.send({ type: "ready", ready: !self?.ready }),

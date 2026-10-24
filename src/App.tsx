@@ -15,6 +15,8 @@ export default function App() {
   const session = useSession(),
     game = useNetworkRace(session.session);
   const sound = useRaceAudio(game.race, game.phase, game.countdown);
+  const laps = game.view?.state.laps ?? 3;
+  const capitals = game.view?.mode === "capitals";
   const isLobby = game.phase === "lobby",
     online = game.connection === "online";
   const colors: [string, string] = [
@@ -51,11 +53,17 @@ export default function App() {
       <main>
         <div className="page-heading">
           <div>
-            <span className="eyebrow">DU CALCUL. DU TURBO. DU DUEL.</span>
+            <span className="eyebrow">
+              {capitals
+                ? "DES CAPITALES. DU TURBO. DU DUEL."
+                : "DU CALCUL. DU TURBO. DU DUEL."}
+            </span>
             <h1>
-              {isLobby
-                ? "La victoire se calcule."
-                : "Fais parler les chiffres."}
+              {capitals
+                ? "Les capitales donnent le rythme."
+                : isLobby
+                  ? "La victoire se calcule."
+                  : "Fais parler les chiffres."}
             </h1>
           </div>
           <span className="session-tag">
@@ -82,7 +90,7 @@ export default function App() {
               </div>
               <div className="circuit-actions">
                 <span>
-                  3 TOURS <i>•</i> {isLobby ? "DÉPART À DEUX" : "DUEL EN LIGNE"}
+                  {laps} TOURS <i>•</i> {isLobby ? "DÉPART À DEUX" : "DUEL EN LIGNE"}
                 </span>
                 <SoundToggle
                   enabled={sound.enabled}
@@ -113,7 +121,7 @@ export default function App() {
                       LE PREMIER VIRAGE VERS LA VICTOIRE
                     </span>
                     <strong>Les Pins</strong>
-                    <span>3 tours. Deux pilotes. Un seul vainqueur.</span>
+                    <span>{laps} tours. Deux pilotes. Un seul vainqueur.</span>
                   </div>
                 </div>
               )}
@@ -121,7 +129,7 @@ export default function App() {
                 <div className="countdown-overlay">
                   <span>EN POSITION</span>
                   <strong key={game.countdown}>{game.countdown}</strong>
-                  <p>Un bon calcul. Un coup d’avance.</p>
+                  <p>Une bonne réponse. Un coup d’avance.</p>
                 </div>
               )}
             </div>
@@ -151,6 +159,10 @@ export default function App() {
           ) : isLobby ? (
             <Lobby
               code={session.session.code}
+              mode={game.view?.mode ?? "math"}
+              onMode={game.setMode}
+              laps={laps}
+              onLaps={game.setLaps}
               self={game.self}
               opponent={game.opponent}
               online={online}
@@ -168,6 +180,7 @@ export default function App() {
               input={game.input}
               feedback={game.feedback}
               active={game.active}
+              onChoose={game.choose}
               onKey={game.key}
               onSkip={game.skip}
             />
@@ -176,7 +189,7 @@ export default function App() {
         <footer className="page-footer">
           <span>La bonne trajectoire commence par la bonne réponse.</span>
           <span>
-            100 % calcul mental <i>·</i> 0 % pilotage
+            {capitals ? "51 pays d’Europe · 4 choix" : "100 % calcul mental"} <i>·</i> 0 % pilotage
           </span>
         </footer>
       </main>
@@ -184,6 +197,7 @@ export default function App() {
         <Results
           state={game.race.current}
           review={game.view?.review ?? []}
+          mode={game.view?.mode ?? "math"}
           opponent={names[1]}
           rematch={game.self?.rematch ?? false}
           disabled={!online}

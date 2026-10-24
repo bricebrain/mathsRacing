@@ -1,9 +1,16 @@
+import { GameModeSelector } from "./GameModeSelector";
+import type { GameMode } from "../engine/questions";
 import { useState } from "react";
-import { CAR_COLORS } from "../engine/config";
+import { LapSelector } from "./LapSelector";
+import { CAR_COLORS, type LapCount } from "../engine/config";
 import { roomInvite, shareRoom } from "../services/rooms";
 import type { MemberView } from "../shared/protocol";
 export function Lobby({
   code,
+  mode,
+  onMode,
+  laps,
+  onLaps,
   self,
   opponent,
   online,
@@ -12,6 +19,10 @@ export function Lobby({
   onLeave,
 }: {
   code: string;
+  mode: GameMode;
+  laps: LapCount;
+  onLaps: (laps: LapCount) => void;
+  onMode: (mode: GameMode) => void;
   self?: MemberView;
   opponent?: MemberView;
   online: boolean;
@@ -28,6 +39,8 @@ export function Lobby({
         <br />
         la ligne de départ.
       </h2>
+      <GameModeSelector mode={mode} disabled={!online || self?.id !== 0} onChange={onMode} />
+      <LapSelector laps={laps} disabled={!online || self?.id !== 0} onChange={onLaps} />
       <div className="invite-box">
         <label htmlFor="invite-link">Invite ton adversaire</label>
         <input

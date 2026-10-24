@@ -49,7 +49,7 @@ export function connectionChanged(
   }
 }
 function begin(room: Room, now: number) {
-  room.race = createRace(crypto.getRandomValues(new Uint32Array(1))[0]);
+  room.race = createRace(crypto.getRandomValues(new Uint32Array(1))[0], room.mode ?? "math", room.laps ?? 3);
   room.raceId = crypto.randomUUID();
   room.startsAt = now + RACE.countdown;
   room.reason = null;
@@ -69,7 +69,19 @@ export function applyRoomAction(
   advanceRoom(room, now);
   const self = room.members.find((member) => member.id === id);
   if (!self) return "Joueur inconnu.";
-  if (action.type === "ready") {
+  if (action.type === "laps") {
+    if (room.race) return "Le nombre de tours est fixé pour cette course.";
+    if (id !== 0) return "Seul le créateur de la salle choisit le nombre de tours.";
+    if (action.laps === (room.laps ?? 3)) return null;
+    room.laps = action.laps;
+    room.members.forEach((member) => { member.ready = false; });
+  } else if (action.type === "mode") {
+    if (room.race) return "Le mode est fixé pour cette course.";
+    if (id !== 0) return "Seul le créateur de la salle choisit le mode.";
+    if (action.mode === (room.mode ?? "math")) return null;
+    room.mode = action.mode;
+    room.members.forEach((member) => { member.ready = false; });
+  } else if (action.type === "ready") {
     if (room.race) return "La course est déjà lancée.";
     self.ready = action.ready;
     if (

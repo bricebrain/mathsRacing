@@ -7,7 +7,7 @@ import {
   skipRemaining,
   submit,
 } from "./race";
-import { answer } from "./math";
+import { answer } from "./questions";
 import { RACE } from "./config";
 describe("Passer un calcul sans avantage de vitesse", () => {
   it("bloque avant huit secondes et accepte exactement à la limite", () => {

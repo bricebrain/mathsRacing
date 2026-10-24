@@ -1,5 +1,6 @@
+import { isCapital, type GameMode } from "../engine/questions";
 import { useEffect } from "react";
-import { TOTAL_DISTANCE } from "../engine/config";
+import { raceDistance } from "../engine/config";
 import type { DisplayRace, Review } from "../shared/protocol";
 export const formatTime = (ms: number) =>
   `${Math.floor(ms / 60000)
@@ -7,6 +8,7 @@ export const formatTime = (ms: number) =>
     .padStart(2, "0")}:${((ms / 1000) % 60).toFixed(1).padStart(4, "0")}`;
 export function Results({
   state,
+  mode,
   onReplay,
   onBack,
   review,
@@ -16,6 +18,7 @@ export function Results({
   reason,
 }: {
   state: DisplayRace;
+  mode: GameMode;
   review: Review[];
   opponent: string;
   rematch: boolean;
@@ -58,7 +61,9 @@ export function Results({
                 ? "Ton adversaire n’a pas pu revenir à temps."
                 : "La connexion n’a pas été rétablie à temps."
               : state.winner === 0
-                ? "Ton calcul mental a fait la différence."
+                ? mode === "capitals"
+                  ? "Tu connais tes capitales !"
+                  : "Ton calcul mental a fait la différence."
                 : state.winner === -1
                   ? "Même chrono, même ligne d’arrivée."
                   : `${opponent} remporte la course.`}
@@ -102,13 +107,13 @@ export function Results({
               ))}
             </tr>
             <tr>
-              <td>Calculs passés</td>
+              <td>Questions passées</td>
               {state.players.map((p, i) => (
                 <td key={i}>{p.skipped}</td>
               ))}
             </tr>
             <tr>
-              <td title="Bonnes réponses divisées par les bonnes réponses, erreurs et calculs passés.">
+              <td title="Bonnes réponses divisées par les bonnes réponses, erreurs et questions passées.">
                 Réussite
               </td>
               {state.players.map((p, i) => (
@@ -132,7 +137,7 @@ export function Results({
               <td>Distance</td>
               {state.players.map((p, i) => (
                 <td key={i}>
-                  {Math.round(p.distance)} / {TOTAL_DISTANCE} m
+                  {Math.round(p.distance)} / {raceDistance(state.laps)} m
                 </td>
               ))}
             </tr>
@@ -140,13 +145,15 @@ export function Results({
         </table>
         {review.length > 0 && (
           <details className="review-calculations">
-            <summary>À revoir · {review.length} calcul(s)</summary>
-            <p>Les calculs passés ou ayant entraîné une erreur :</p>
+            <summary>À revoir · {review.length} question(s)</summary>
+            <p>Les questions passées ou ayant entraîné une erreur :</p>
             <ul>
               {review.map(({ operation, answer }) => {
                 return (
                   <li key={operation.id}>
-                    {operation.a} {operation.operator} {operation.b} ={" "}
+                    {isCapital(operation)
+                      ? `${operation.country} → `
+                      : `${operation.a} ${operation.operator} ${operation.b} = `}
                     <strong>{answer}</strong>
                   </li>
                 );

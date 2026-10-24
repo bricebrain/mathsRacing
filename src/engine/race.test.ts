@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { answer, classify, makeSequence } from "./math";
+import { classify, makeSequence } from "./math";
+import { answer } from "./questions";
 import { advance, boostAt, createRace, submit } from "./race";
 import { RACE, TOTAL_DISTANCE } from "./config";
 describe("opérations et équité", () => {
@@ -113,5 +114,30 @@ describe("simulation indépendante du rendu", () => {
     advance(boosted, 70000);
     expect(boosted.winner).toBe(1);
     expect(submit(boosted, 0, "1", 0, 71000)).toBe("ignored");
+  });
+});
+
+describe("courses de 3, 5 ou 10 tours", () => {
+  it.each([3, 5, 10] as const)("termine exactement après %i tours", (laps) => {
+    const state = createRace(5, "math", laps);
+    expect(state.laps).toBe(laps);
+    const distance = RACE.lapLength * laps;
+    advance(state, ((distance - 1) / RACE.baseSpeed) * 1000);
+    expect(state.winner).toBeNull();
+    advance(state, (distance / RACE.baseSpeed) * 1000 + 100);
+    expect(state.winner).toBe(-1);
+    expect(state.players[0].distance).toBe(distance);
+    expect(state.players[0].finishedAt).toBeCloseTo((distance / RACE.baseSpeed) * 1000);
+  });
+  it.each([5, 10] as const)("continue après le troisième tour pour %i tours, dans les deux modes", (laps) => {
+    for (const mode of ["math", "capitals"] as const) {
+      const state = createRace(42, mode, laps);
+      advance(state, 65000);
+      expect(state.winner).toBeNull();
+      expect(state.players[0].distance).toBeGreaterThan(TOTAL_DISTANCE);
+      // Même à la cadence maximale, assez de questions pour toute la course sans boost.
+      const maxAttempts = Math.ceil((RACE.lapLength * laps / RACE.baseSpeed) * 1000 / RACE.submitDelay);
+      expect(state.sequence.length).toBeGreaterThan(maxAttempts);
+    }
   });
 });

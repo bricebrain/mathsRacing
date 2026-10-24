@@ -1,4 +1,4 @@
-import { RACE } from "../engine/config";
+import { RACE, type LapCount } from "../engine/config";
 import type { DisplayRace, PublicRacer } from "./protocol";
 export const emptyRacer = (): PublicRacer => ({
   distance: 0,
@@ -11,7 +11,8 @@ export const emptyRacer = (): PublicRacer => ({
   boostAt: -RACE.boostDuration - RACE.fadeDuration,
   finishedAt: null,
 });
-export const emptyRace = (): DisplayRace => ({
+export const emptyRace = (laps: LapCount = 3): DisplayRace => ({
+  laps,
   players: [emptyRacer(), emptyRacer()],
   time: 0,
   winner: null,

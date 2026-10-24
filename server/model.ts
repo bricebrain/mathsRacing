@@ -1,4 +1,4 @@
-import { CAR_COLORS } from "../src/engine/config";
+import { CAR_COLORS, type LapCount } from "../src/engine/config";
 import {
   NETWORK,
   type ActionResult,
@@ -14,7 +14,10 @@ export interface Member {
   ready: boolean;
   rematch: boolean;
 }
+import type { GameMode } from "../src/engine/questions";
 export interface Room {
+  laps: LapCount;
+  mode: GameMode;
   code: string;
   members: Member[];
   revision: number;
@@ -40,6 +43,8 @@ export const member = (
 });
 export const makeRoom = (code: string, name: string, now: number): Room => ({
   code,
+  mode: "math",
+  laps: 3,
   members: [member(0, name)],
   revision: 0,
   expiresAt: now + NETWORK.ttl,

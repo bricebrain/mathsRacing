@@ -1,5 +1,7 @@
-import { DIFFICULTIES, RACE, TOTAL_DISTANCE } from "./config";
-import { answer, makeSequence, type Operation } from "./math";
+import { DIFFICULTIES, RACE, raceDistance, sequenceLength, type LapCount } from "./config";
+import { makeSequence } from "./math";
+import { makeCapitalSequence } from "./capitals";
+import { answer, isCapital, type Question, type GameMode } from "./questions";
 export interface Racer {
   distance: number;
   index: number;
@@ -14,7 +16,8 @@ export interface Racer {
   finishedAt: number | null;
 }
 export interface RaceState {
-  sequence: Operation[];
+  laps: LapCount;
+  sequence: Question[];
   players: [Racer, Racer];
   time: number;
   winner: number | null;
@@ -32,8 +35,11 @@ const racer = (): Racer => ({
   lastAttempt: -RACE.submitDelay,
   finishedAt: null,
 });
-export const createRace = (seed: number): RaceState => ({
-  sequence: makeSequence(seed, RACE.sequenceLength),
+export const createRace = (seed: number, mode: GameMode = "math", laps: LapCount = 3): RaceState => ({
+  laps,
+  sequence: mode === "capitals"
+    ? makeCapitalSequence(seed, sequenceLength(laps))
+    : makeSequence(seed, sequenceLength(laps)),
   players: [racer(), racer()],
   time: 0,
   winner: null,
@@ -75,18 +81,19 @@ export function projectDistance(
 }
 export function advance(state: RaceState, time: number) {
   if (time <= state.time || state.winner !== null) return;
+  const totalDistance = raceDistance(state.laps);
   const previous = state.time;
   const distanceAt = (player: Racer, at: number) =>
     player.distance +
     (RACE.baseSpeed / 1000) *
       (at - previous + boostArea(player, at) - boostArea(player, previous));
   const arrivals = state.players.map((player) => {
-    if (distanceAt(player, time) < TOTAL_DISTANCE) return null;
+    if (distanceAt(player, time) < totalDistance) return null;
     let low = previous,
       high = time;
     for (let i = 0; i < 32; i++) {
       const middle = (low + high) / 2;
-      if (distanceAt(player, middle) >= TOTAL_DISTANCE) high = middle;
+      if (distanceAt(player, middle) >= totalDistance) high = middle;
       else low = middle;
     }
     return high;
@@ -99,7 +106,7 @@ export function advance(state: RaceState, time: number) {
   state.players.forEach((player, index) => {
     const arrivedAt = arrivals[index];
     const finished = arrivedAt !== null && arrivedAt - stopAt < 0.01;
-    player.distance = finished ? TOTAL_DISTANCE : distanceAt(player, stopAt);
+    player.distance = finished ? totalDistance : distanceAt(player, stopAt);
     player.finishedAt = finished ? arrivedAt : null;
   });
   state.time = stopAt;
@@ -125,7 +132,7 @@ export function submit(
     state.winner !== null ||
     !op ||
     op.id !== operationId ||
-    !/^\d{1,3}$/.test(value) ||
+    !(isCapital(op) ? /^[0-3]$/.test(value) : /^\d{1,3}$/.test(value)) ||
     time - p.lastAttempt < RACE.submitDelay
   )
     return "ignored";

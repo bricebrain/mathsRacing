@@ -1,4 +1,4 @@
-import { TOTAL_DISTANCE } from "../engine/config";
+import { raceDistance } from "../engine/config";
 import { projectDistance } from "../engine/race";
 import {
   NETWORK,
@@ -53,9 +53,9 @@ export class RaceInterpolator {
       }
       return {
         ...player,
-        distance: Math.min(TOTAL_DISTANCE - 0.001, distance),
+        distance: Math.min(raceDistance(latest.laps) - 0.001, distance),
       };
     }) as [PublicRacer, PublicRacer];
-    return { players, time: elapsed, winner: latest.winner };
+    return { laps: latest.laps, players, time: elapsed, winner: latest.winner };
   }
 }

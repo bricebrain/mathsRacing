@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { makeRoom, member } from "./model";
 import { advanceRoom, applyRoomAction, connectionChanged } from "./match";
 import { roomView } from "./view";
-import { answer } from "../src/engine/math";
+import { answer } from "../src/engine/questions";
 import { NETWORK, type ClientAction } from "../src/shared/protocol";
 const now = 100000;
 function started() {

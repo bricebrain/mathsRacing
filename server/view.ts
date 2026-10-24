@@ -1,4 +1,4 @@
-import { answer } from "../src/engine/math";
+import { answer, answerLabel, isCapital } from "../src/engine/questions";
 import { emptyRace } from "../src/shared/display";
 import type { PlayerId, RoomView, PublicRacer } from "../src/shared/protocol";
 import type { Room } from "./model";
@@ -19,6 +19,7 @@ export function roomView(
         : "racing";
   const state = race
     ? {
+        laps: race.laps ?? 3,
         time: race.time,
         winner: race.winner,
         players: race.players.map((player) => {
@@ -26,9 +27,10 @@ export function roomView(
           return safe;
         }) as [PublicRacer, PublicRacer],
       }
-    : emptyRace();
+    : emptyRace(room.laps ?? 3);
   return {
     code: room.code,
+    mode: room.mode ?? "math",
     selfId,
     raceId: room.raceId,
     revision: room.revision,
@@ -48,7 +50,9 @@ export function roomView(
       race && finished
         ? race.players[selfId].reviewIds.map((id) => ({
             operation: race.sequence[id],
-            answer: answer(race.sequence[id]),
+            answer: isCapital(race.sequence[id])
+              ? answerLabel(race.sequence[id])
+              : answer(race.sequence[id]),
           }))
         : [],
     reason: room.reason,

@@ -3,7 +3,12 @@ export function readRoom(storage: DurableObjectStorage): Room | null {
   const row = storage.sql
     .exec<{ data: string }>("SELECT data FROM room WHERE id=1")
     .toArray()[0];
-  return row ? (JSON.parse(row.data) as Room) : null;
+  if (!row) return null;
+  const room = JSON.parse(row.data) as Room;
+  room.mode ??= "math";
+  room.laps ??= 3;
+  if (room.race) room.race.laps ??= 3;
+  return room;
 }
 export function saveRoom(storage: DurableObjectStorage, room: Room) {
   room.revision++;

@@ -1,3 +1,4 @@
+import { isCapital } from "../engine/questions";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Phase } from "../shared/protocol";
 import { createActionId } from "../utils/actionId";
@@ -31,14 +32,15 @@ export function useRaceControls(
     return () => clearTimeout(timer);
   }, [room.ack]);
   const submit = useCallback(
-    (type: "answer" | "skip") => {
+    (type: "answer" | "skip", choice?: string) => {
       const view = room.view;
+      const value = choice ?? input;
       if (
         !available ||
         !view?.question ||
         !view.raceId ||
         action.current ||
-        (type === "answer" && !input)
+        (type === "answer" && !value)
       )
         return;
       const actionId = createActionId();
@@ -50,7 +52,7 @@ export function useRaceControls(
       if (
         room.send(
           type === "answer"
-            ? { type, ...base, value: input }
+            ? { type, ...base, value }
             : { type, ...base },
         )
       ) {
@@ -64,12 +66,16 @@ export function useRaceControls(
   const key = useCallback(
     (value: string) => {
       if (!available) return;
+      if (room.view?.question && isCapital(room.view.question)) {
+        if (/^[1-4]$/.test(value)) submit("answer", String(Number(value) - 1));
+        return;
+      }
       if (value === "OK") submit("answer");
       else if (value === "⌫") setInput((current) => current.slice(0, -1));
       else if (/^\d$/.test(value))
         setInput((current) => (current.length < 3 ? current + value : current));
     },
-    [available, submit],
+    [available, submit, room.view?.question],
   );
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -79,6 +85,8 @@ export function useRaceControls(
         event.target instanceof HTMLInputElement
       )
         return;
+      if (room.view?.question && isCapital(room.view.question) &&
+        !/^[1-4]$/.test(event.key)) return;
       const control =
         event.target instanceof HTMLElement &&
         event.target.closest(".skip-button,.sound-toggle");
@@ -105,12 +113,17 @@ export function useRaceControls(
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [available, key]);
+  }, [available, key, room.view?.question]);
   return {
     input,
     feedback,
     pending,
     key,
+    choose: (index: number) => {
+      if (room.view?.question && isCapital(room.view.question) &&
+        Number.isInteger(index) && index >= 0 && index < 4)
+        submit("answer", String(index));
+    },
     skip: () => submit("skip"),
     active: available,
   };

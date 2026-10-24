@@ -1,4 +1,4 @@
-import { RACE, TOTAL_DISTANCE } from "../engine/config";
+import { RACE, raceDistance } from "../engine/config";
 import type { DisplayRace } from "../shared/protocol";
 import { formatTime } from "./Results";
 export function Scoreboard({
@@ -30,16 +30,16 @@ export function Scoreboard({
               <span>
                 Tour{" "}
                 {Math.min(
-                  RACE.laps,
+                  state.laps,
                   Math.floor(p.distance / RACE.lapLength) + 1,
                 )}
-                <em> / {RACE.laps}</em>
+                <em> / {state.laps}</em>
               </span>
             </div>
             <div className="progress-track">
               <div
                 style={{
-                  width: `${(100 * p.distance) / TOTAL_DISTANCE}%`,
+                  width: `${(100 * p.distance) / raceDistance(state.laps)}%`,
                   background: colors[i],
                 }}
               />

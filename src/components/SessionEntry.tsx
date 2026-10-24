@@ -18,9 +18,9 @@ export function SessionEntry({
       <h2>
         Invite ton rival.
         <br />
-        Calcule. Accélère.
+        Réponds. Accélère.
       </h2>
-      <p className="muted">Chacun sur son téléphone, sur le même circuit.</p>
+      <p className="muted">Maths ou capitales d’Europe. Chacun sur son téléphone, sur le même circuit.</p>
       <form
         onSubmit={(event) => {
           event.preventDefault();

@@ -1,6 +1,6 @@
-# Math Racing — multijoueur
+# Math Racing — maths et capitales en multijoueur
 
-Jeu de course mathématique à deux joueurs, chacun sur son téléphone. React, TypeScript, Vite, Phaser et serveur Cloudflare Durable Objects. Le départ, les opérations, les réponses, les boosts, les distances et le résultat sont calculés côté serveur.
+Jeu de course mathématique à deux joueurs, chacun sur son téléphone. React, TypeScript, Vite, Phaser et serveur Cloudflare Durable Objects. Le départ, les questions, les réponses, les boosts, les distances et le résultat sont calculés côté serveur.
 
 **Aucun mode solo ni adversaire automatique.**
 
@@ -19,14 +19,16 @@ Le serveur de développement lance aussi le Worker, les WebSockets et le stockag
 2. Choisir un pseudo et cliquer **Créer une salle**.
 3. Partager l'invitation ou transmettre le code à six caractères au second joueur.
 4. Le second joueur ouvre le lien et saisit son pseudo pour rejoindre.
-5. Chacun choisit une couleur disponible et clique **Je suis prêt**.
+5. Le créateur choisit **Maths** ou **Capitales d’Europe**, puis **3, 5 ou 10 tours** (3 par défaut) pour la salle. Chacun choisit une couleur disponible et clique **Je suis prêt**.
 6. Le compte à rebours commun lance la course.
 
 Depuis le Mac, `localhost` fonctionne également. En développement, l'invitation utilise automatiquement l'adresse privée détectée du Mac pour qu'elle soit ouvrable sur un téléphone. Les appareils doivent pouvoir communiquer sur le réseau local ; les liens locaux ne sont pas accessibles depuis Internet.
 
 ## Règles
 
-Les voitures suivent automatiquement le circuit. Les joueurs reçoivent la même séquence et progressent indépendamment. Répondre avec le pavé ou le clavier puis OK/Entrée. Une erreur conserve la question ; une réussite déclenche un boost de trois secondes, remplacé par chaque nouvelle réussite.
+En maths, saisir le résultat avec le pavé ou le clavier. En capitales, un pays est affiché avec quatre capitales : cliquer un choix ou utiliser les touches 1 à 4. Le catalogue couvre 51 entrées au-delà de l’UE, avec pays transcontinentaux et Caucase : [périmètre, difficultés et sources](docs/CAPITALES.md).
+
+Les voitures suivent automatiquement le circuit. Les joueurs reçoivent la même séquence et progressent indépendamment. En maths, valider avec OK/Entrée ; un choix de capitale se valide immédiatement. Une erreur conserve la question ; une réussite déclenche un boost de trois secondes, remplacé par chaque nouvelle réussite.
 
 Après huit secondes, **Passer** permet d'avancer sans nouveau boost. Les calculs passés et les erreurs sont comptés séparément ; leurs corrections sont disponibles à l'arrivée. Les résultats sont figés au premier franchissement.
 
@@ -50,6 +52,7 @@ Avec le serveur actif et Chromium Playwright installé :
 ```sh
 npm run test:e2e
 node scripts/check-recovery.mjs
+node scripts/check-capitals.mjs
 ```
 
 `GAME_URL` permet de choisir un autre hôte ou port. Le premier scénario effectue une course réelle entre deux sessions indépendantes, dont la durée dépend des réponses. Il couvre les invitations, le départ, les validations, les doublons, la reconnexion, le passage, l'arrivée et la revanche. Le second vérifie la reprise entre onglets, les accès refusés et l'abandon après le délai réel. Captures dans `/tmp/math-racing-*.png`.
