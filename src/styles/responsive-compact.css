@@ -75,12 +75,6 @@
   .phase-countdown .track-footer {
     height: 28px;
   }
-  .phase-racing .race-canvas,
-  .phase-countdown .race-canvas {
-    aspect-ratio: auto;
-    height: min(calc((100vw - 30px) * 0.64), calc(100svh - 620px));
-    min-height: 120px;
-  }
   .driver-progress > div:first-child > span {
     white-space: nowrap;
   }
@@ -90,11 +84,17 @@
   .phase-countdown .site-header {
     display: none;
   }
-  .phase-racing .race-canvas,
-  .phase-countdown .race-canvas {
-    height: min(calc((100vw - 30px) * 0.64), calc(100svh - 476px));
-  }
   .keypad button {
     height: 40px;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 760px) {
+  .choice-question .MuiButton-root {
+    min-height: 44px;
+  }
+  .choice-question > img {
+    height: 64px;
+    margin-bottom: 8px;
   }
 }

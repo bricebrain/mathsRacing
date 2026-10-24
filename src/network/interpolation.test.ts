@@ -4,7 +4,7 @@ import { emptyRace } from '../shared/display';
 import type { RoomView } from '../shared/protocol';
 function snapshot(time:number,distance:number):RoomView {
  const state=emptyRace();state.time=time;state.players.forEach(p=>p.distance=distance);
- return {mode:'math',code:'ABC234',selfId:0,raceId:'race1',revision:time,serverTime:time+100000,startsAt:100000,phase:'racing',members:[],state,question:null,review:[],reason:null};
+ return {capacity:2,themes:['math'],correction:null,mode:'math',code:'ABC234',selfId:0,raceId:'race1',revision:time,serverTime:time+100000,startsAt:100000,phase:'racing',members:[],state,question:null,review:[],reason:null};
 }
 it('interpole les états espacés et plafonne la prédiction sans inventer de vainqueur',()=>{
  const interpolation=new RaceInterpolator(),first=snapshot(1000,52),next=snapshot(1200,62.4);

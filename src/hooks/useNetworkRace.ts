@@ -1,4 +1,5 @@
-import type { LapCount } from "../engine/config";
+import { perspective } from "../shared/ranking";
+import type { LapCount, PlayerCount } from "../engine/config";
 import type { GameMode } from "../engine/questions";
 import { useEffect, useRef, useState } from "react";
 import { emptyRace } from "../shared/display";
@@ -6,18 +7,6 @@ import type { CarColor, DisplayRace, Phase, Session } from "../shared/protocol";
 import { RaceInterpolator } from "../network/interpolation";
 import { useRoom } from "./useRoom";
 import { useRaceControls } from "./useRaceControls";
-function perspective(state: DisplayRace, id: 0 | 1): DisplayRace {
-  return {
-    ...state,
-    players: [state.players[id], state.players[1 - id]],
-    winner:
-      state.winner === null || state.winner === -1
-        ? state.winner
-        : state.winner === id
-          ? 0
-          : 1,
-  };
-}
 export function useNetworkRace(session: Session | null) {
   const room = useRoom(session);
   const [race] = useState(() => ({ current: emptyRace() }));
@@ -63,16 +52,16 @@ export function useNetworkRace(session: Session | null) {
   const self = room.view?.members.find(
       (member) => member.id === room.view?.selfId,
     ),
-    opponent = room.view?.members.find(
+    opponents = room.view?.members.filter(
       (member) => member.id !== room.view?.selfId,
-    );
+    ) ?? [];
   return {
     ...room,
     ...controls,
     race,
     phase,
     self,
-    opponent,
+    opponents,
     countdown: Math.max(
       1,
       Math.min(
@@ -80,8 +69,9 @@ export function useNetworkRace(session: Session | null) {
         Math.ceil(((room.view?.startsAt ?? serverNow) - serverNow) / 1000),
       ),
     ),
+    setCapacity: (capacity: PlayerCount) => room.send({ type: "capacity", capacity }),
     setLaps: (laps: LapCount) => room.send({ type: "laps", laps }),
-    setMode: (mode: GameMode) => room.send({ type: "mode", mode }),
+    setTheme: (theme: GameMode, selected: boolean) => room.send({ type: "theme", theme, selected }),
     setColor: (color: string) =>
       room.send({ type: "color", color: color as CarColor }),
     ready: () => room.send({ type: "ready", ready: !self?.ready }),

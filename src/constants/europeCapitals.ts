@@ -1,5 +1,6 @@
 import type { Difficulty } from "../engine/math";
 export interface CountryCapital {
+  prompt?: string;
   id: string;
   country: string;
   capital: string;

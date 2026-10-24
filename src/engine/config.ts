@@ -8,6 +8,7 @@ export const RACE = {
   fadeDuration: 650,
   submitDelay: 300,
   skipDelay: 8000,
+  correctionDuration: 2000,
 };
 export const DIFFICULTIES = {
   veryEasy: { label: "Très facile", boost: 0.15, color: "#7bdac5" },
@@ -23,3 +24,6 @@ export type LapCount = (typeof LAP_OPTIONS)[number];
 export const raceDistance = (laps: LapCount) => RACE.lapLength * laps;
 export const sequenceLength = (laps: LapCount) =>
   Math.ceil((RACE.sequenceLength * laps) / RACE.laps);
+
+export const PLAYER_COUNTS = [2, 3, 4] as const;
+export type PlayerCount = (typeof PLAYER_COUNTS)[number];

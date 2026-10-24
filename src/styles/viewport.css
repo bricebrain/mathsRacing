@@ -1,0 +1,84 @@
+/* Le classement et les contrôles réservent leur place ; le circuit prend le reste. */
+.app main {
+  max-width: none;
+  height: 100dvh;
+  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+}
+.app .game-layout {
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 25vw, 370px);
+  gap: 10px;
+  align-items: stretch;
+}
+.app .circuit-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+.race-summary {
+  display: flex;
+  align-items: center;
+  background: #142126;
+  flex-shrink: 0;
+  padding-right: 8px;
+}
+.race-summary .scoreboard {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 12px;
+  gap: 12px;
+}
+.app .race-clock { display: flex; }
+.app .track-container {
+  flex: 1;
+  min-height: 0;
+}
+.app .race-canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+.app .control-panel {
+  min-height: 0;
+  max-height: 100%;
+  padding: 16px;
+  overflow-y: auto;
+  align-self: start;
+}
+.session-entry form { margin: 0; }
+.boost-value { color: var(--lime); font-size: 12px; font-weight: 700; }
+@media (max-width: 700px) {
+  .app main { padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left)); }
+  .app .game-layout { gap: 6px; }
+  .app .circuit-card { flex: 1; }
+  .app .control-panel { flex: 0 1 auto; max-height: 58%; padding: 12px; }
+  .race-summary .scoreboard { padding: 8px; gap: 8px; }
+  .race-summary .scoreboard-many { gap: 7px; }
+  .race-summary .race-clock { padding-left: 7px; }
+  .race-summary .race-clock strong { font-size: 12px; }
+  .race-summary .position { font-size: 19px; min-width: 21px; }
+  .race-summary .driver-progress > div:first-child { font-size: 7px; margin-bottom: 5px; }
+  .race-summary .sound-toggle { width: 28px; height: 28px; }
+  .app .question { margin: 7px 0 4px; }
+  .app .keypad button { height: 40px; }
+  .app .turbo-gauge { margin-top: 8px; padding: 8px; }
+  .app .turbo-gauge > div:first-child { margin-bottom: 6px; }
+  .app .personal-stats { display: none; }
+}
+@media (max-height: 550px) and (min-width: 701px), (max-height: 500px) and (orientation: landscape) {
+  .app .game-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 35%);
+  }
+  .app .control-panel { max-height: 100%; }
+  .race-summary .driver-progress small { display: none; }
+  .race-summary .driver-progress > div:first-child { flex-wrap: wrap; }
+  .race-summary .race-clock { padding-left: 6px; }
+  .race-summary .race-clock strong { font-size: 12px; }
+}

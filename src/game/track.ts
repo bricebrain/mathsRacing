@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 export const WORLD = { width: 1000, height: 640 };
-// La même abscisse curviligne pilote les deux voies : le décalage reste visuel.
+// La même abscisse curviligne pilote toutes les voies : le décalage reste visuel.
 export function createTrack() {
   // Tracé en « 8 » : les deux diagonales centrales se croisent vers (516,320),
   // la première passe sur un pont, la seconde passe dessous.

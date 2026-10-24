@@ -1,6 +1,6 @@
 # Capitales d’Europe
 
-Le créateur choisit « Maths » ou « Capitales d’Europe » dans le salon. Le mode s’applique aux deux joueurs ; un changement annule les états « prêt ». Il est figé dès le compte à rebours et conservé pour la revanche.
+Le créateur coche un ou plusieurs thèmes dans le salon, dont « Capitales d’Europe ». Le mode s’applique aux deux joueurs ; un changement annule les états « prêt ». Il est figé dès le compte à rebours et conservé pour la revanche.
 
 ## Périmètre
 
@@ -12,7 +12,7 @@ Amsterdam est la capitale des Pays-Bas, même si le gouvernement siège à La Ha
 
 Chaque cycle présente les 51 pays une fois dans un ordre mélangé, sans répétition immédiate entre deux cycles. La graine commune produit exactement les mêmes pays, propositions et positions pour les deux joueurs, qui avancent indépendamment. Une question comporte une seule bonne capitale et trois autres capitales distinctes du catalogue. La position correcte varie.
 
-Le clic valide immédiatement ; les touches 1 à 4 sélectionnent aussi une réponse. Le serveur reçoit uniquement l’index 0 à 3 et vérifie sa validité. Comme en maths, une erreur conserve la question, compte une erreur et ne donne aucun nouveau turbo ; une bonne réponse avance et relance le turbo. Le délai minimal existant entre tentatives reste actif. Ce fonctionnement autorise plusieurs essais, conformément à la demande de conserver le procédé des maths : il ne mesure donc pas uniquement le rappel au premier essai.
+Le clic valide immédiatement ; les touches 1 à 4 sélectionnent aussi une réponse. Le serveur reçoit uniquement l’index 0 à 3 et vérifie sa validité. Comme dans les autres thèmes, une erreur compte une fois, affiche la bonne réponse pendant deux secondes et bloque les réponses et le passage. Le serveur avance ensuite automatiquement, sans nouveau turbo. Une bonne réponse avance immédiatement et relance le turbo.
 
 Passer devient possible après huit secondes, sans nouveau boost. Les corrections des questions erronées ou passées sont disponibles à l’arrivée, uniquement pour le joueur concerné. Les règles de course, de reconnexion et de revanche restent identiques.
 

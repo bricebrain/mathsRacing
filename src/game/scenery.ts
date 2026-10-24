@@ -62,7 +62,7 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
     i ? path0.lineTo(point.x, point.y) : path0.moveTo(point.x, point.y),
   );
   path0.closePath();
-  ctx.lineWidth = 130;
+  ctx.lineWidth = 154;
   for (let i = 0; i < 14; i++) {
     const x = random() * 1000,
       y = random() * 640;
@@ -204,7 +204,7 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
   // Arbres du pack Kenney, posés avec une ombre portée et une rotation variée.
   const treeLarge = sprite("asset-tree-large"),
     treeSmall = sprite("asset-tree-small");
-  ctx.lineWidth = 175;
+  ctx.lineWidth = 199;
   const blocked = (x: number, y: number) =>
     ctx.isPointInStroke(path, x, y) ||
     (x > 155 && x < 405 && y > 185 && y < 315) ||

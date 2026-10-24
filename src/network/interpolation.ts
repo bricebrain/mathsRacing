@@ -34,6 +34,7 @@ export class RaceInterpolator {
       }
     }
     const players = latest.players.map((player, index) => {
+      if (player.eliminatedAt != null) return { ...player };
       let distance: number;
       if (after && after.time > before.time) {
         const ratio = Math.max(
@@ -55,7 +56,7 @@ export class RaceInterpolator {
         ...player,
         distance: Math.min(raceDistance(latest.laps) - 0.001, distance),
       };
-    }) as [PublicRacer, PublicRacer];
-    return { laps: latest.laps, players, time: elapsed, winner: latest.winner };
+    }) as PublicRacer[];
+    return { laps: latest.laps, players, time: elapsed, winner: latest.winner, winners: latest.winners };
   }
 }

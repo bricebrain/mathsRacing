@@ -1,26 +1,23 @@
-import { isCapital, type GameMode } from "../engine/questions";
+import { Box } from "@mui/material";
+import { isChoice, isCapital, questionLabel, type GameMode } from "../engine/questions";
 import { useEffect } from "react";
-import { raceDistance } from "../engine/config";
+import { RaceStats } from "./RaceStats";
 import type { DisplayRace, Review } from "../shared/protocol";
-export const formatTime = (ms: number) =>
-  `${Math.floor(ms / 60000)
-    .toString()
-    .padStart(2, "0")}:${((ms / 1000) % 60).toFixed(1).padStart(4, "0")}`;
 export function Results({
   state,
-  mode,
+  themes,
   onReplay,
   onBack,
   review,
-  opponent,
+  names,
   rematch,
   disabled,
   reason,
 }: {
   state: DisplayRace;
-  mode: GameMode;
+  themes: GameMode[];
   review: Review[];
-  opponent: string;
+  names: string[];
   rematch: boolean;
   disabled: boolean;
   reason: string | null;
@@ -34,10 +31,13 @@ export function Results({
       document.body.style.overflow = previous;
     };
   }, []);
+  const won = state.winners.includes(0);
+  const tied = state.winners.length > 1;
+  const winnerNames = state.winners.map((index) => index === 0 ? "Toi" : names[index]).join(" et ");
   return (
     <div className="overlay results-overlay">
       <section
-        className="result-card"
+        className={`result-card ${state.players.length > 2 ? "result-card-many" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="result-title"
@@ -47,102 +47,34 @@ export function Results({
         <h2 id="result-title">
           {reason === "interrupted"
             ? "Course interrompue"
-            : state.winner === -1
-              ? "Égalité parfaite !"
-              : state.winner === 0
+            : tied && won
+              ? state.winners.length === state.players.length ? "Égalité parfaite !" : "Victoire partagée !"
+              : won
                 ? "Belle victoire !"
                 : "La revanche t’attend."}
         </h2>
         <p>
           {reason === "interrupted"
-            ? "Rejouez lorsque les deux connexions sont rétablies."
+            ? "Rejouez lorsque les connexions sont rétablies."
             : reason === "forfeit"
-              ? state.winner === 0
-                ? "Ton adversaire n’a pas pu revenir à temps."
+              ? won
+                ? "Les autres pilotes n’ont pas pu revenir à temps."
                 : "La connexion n’a pas été rétablie à temps."
-              : state.winner === 0
-                ? mode === "capitals"
-                  ? "Tu connais tes capitales !"
+              : won
+                ? themes.some((theme) => theme !== "math")
+                  ? "Tes connaissances ont fait la différence !"
                   : "Ton calcul mental a fait la différence."
-                : state.winner === -1
-                  ? "Même chrono, même ligne d’arrivée."
-                  : `${opponent} remporte la course.`}
+                : tied
+                  ? `${winnerNames} partagent la victoire.`
+                  : `${winnerNames} remporte la course.`}
         </p>
         {reason === "forfeit" && (
           <p>Victoire par abandon après une déconnexion prolongée.</p>
         )}
         {reason === "interrupted" && (
-          <p>Course interrompue : les deux pilotes étaient déconnectés.</p>
+          <p>Course interrompue : tous les pilotes ont abandonné.</p>
         )}
-        <table>
-          <caption>Bilan de la course multijoueur</caption>
-          <thead>
-            <tr>
-              <th>Statistiques</th>
-              <th>Toi</th>
-              <th>{opponent}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Temps</td>
-              {state.players.map((p, i) => (
-                <td key={i}>
-                  {p.finishedAt === null
-                    ? "Non terminé"
-                    : formatTime(p.finishedAt)}
-                </td>
-              ))}
-            </tr>
-            <tr>
-              <td>Bonnes réponses</td>
-              {state.players.map((p, i) => (
-                <td key={i}>{p.correct}</td>
-              ))}
-            </tr>
-            <tr>
-              <td>Erreurs</td>
-              {state.players.map((p, i) => (
-                <td key={i}>{p.errors}</td>
-              ))}
-            </tr>
-            <tr>
-              <td>Questions passées</td>
-              {state.players.map((p, i) => (
-                <td key={i}>{p.skipped}</td>
-              ))}
-            </tr>
-            <tr>
-              <td title="Bonnes réponses divisées par les bonnes réponses, erreurs et questions passées.">
-                Réussite
-              </td>
-              {state.players.map((p, i) => (
-                <td key={i}>
-                  {p.correct + p.errors + p.skipped
-                    ? Math.round(
-                        (100 * p.correct) / (p.correct + p.errors + p.skipped),
-                      )
-                    : 0}{" "}
-                  %
-                </td>
-              ))}
-            </tr>
-            <tr>
-              <td>Boosts obtenus</td>
-              {state.players.map((p, i) => (
-                <td key={i}>{p.correct}</td>
-              ))}
-            </tr>
-            <tr>
-              <td>Distance</td>
-              {state.players.map((p, i) => (
-                <td key={i}>
-                  {Math.round(p.distance)} / {raceDistance(state.laps)} m
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
+        <RaceStats state={state} names={names} />
         {review.length > 0 && (
           <details className="review-calculations">
             <summary>À revoir · {review.length} question(s)</summary>
@@ -151,8 +83,13 @@ export function Results({
               {review.map(({ operation, answer }) => {
                 return (
                   <li key={operation.id}>
-                    {isCapital(operation)
-                      ? `${operation.country} → `
+                    {isChoice(operation) && !isCapital(operation) && operation.theme === "flags" &&
+                      <Box component="img" src={`/flags/${operation.entryId.toLowerCase()}.svg`}
+                        alt={`Drapeau : ${answer}`} sx={{ width: 48, height: 28,
+                          objectFit: "contain", display: "block", mb: 0.5 }} />}
+
+                    {isChoice(operation)
+                      ? `${questionLabel(operation)} → `
                       : `${operation.a} ${operation.operator} ${operation.b} = `}
                     <strong>{answer}</strong>
                   </li>

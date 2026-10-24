@@ -113,3 +113,61 @@
     font-size: 26px;
   }
 }
+
+.track-driver {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scoreboard-many {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 12px 18px;
+}
+.scoreboard-many .race-clock {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+.scoreboard-many .driver-progress {
+  min-width: 0;
+}
+.result-card-many {
+  max-width: 740px;
+}
+@media (max-width: 700px) {
+  .scoreboard-many {
+    gap: 9px;
+    padding: 8px 12px;
+  }
+  .scoreboard-many .position {
+    font-size: 19px;
+    min-width: 22px;
+  }
+  .scoreboard-many .driver-progress > div:first-child {
+    font-size: 7px;
+    margin-bottom: 5px;
+  }
+  .scoreboard-many .driver-name {
+    max-width: 42px;
+  }
+  .scoreboard-many .race-clock {
+    padding-left: 7px;
+  }
+  .scoreboard-many .race-clock strong {
+    font-size: 12px;
+  }
+  .players-3 .track-driver, .players-4 .track-driver {
+    max-width: 65px;
+    font-size: 7px;
+  }
+  .players-3 .track-footer > span:last-child, .players-4 .track-footer > span:last-child {
+    display: none;
+  }
+}
+@media (max-width: 700px) and (max-height: 760px) {
+}

@@ -1,6 +1,6 @@
-# Math Racing — maths et capitales en multijoueur
+# Math Racing — course de connaissances en multijoueur
 
-Jeu de course mathématique à deux joueurs, chacun sur son téléphone. React, TypeScript, Vite, Phaser et serveur Cloudflare Durable Objects. Le départ, les questions, les réponses, les boosts, les distances et le résultat sont calculés côté serveur.
+Jeu de course de connaissances de deux à quatre joueurs, chacun sur son téléphone. React, TypeScript, Vite, Phaser et serveur Cloudflare Durable Objects. Le départ, les questions, les réponses, les boosts, les distances et le résultat sont calculés côté serveur.
 
 **Aucun mode solo ni adversaire automatique.**
 
@@ -17,28 +17,28 @@ Le serveur de développement lance aussi le Worker, les WebSockets et le stockag
 
 1. Ouvrir l'adresse **Network** affichée par Vite sur le premier téléphone.
 2. Choisir un pseudo et cliquer **Créer une salle**.
-3. Partager l'invitation ou transmettre le code à six caractères au second joueur.
-4. Le second joueur ouvre le lien et saisit son pseudo pour rejoindre.
-5. Le créateur choisit **Maths** ou **Capitales d’Europe**, puis **3, 5 ou 10 tours** (3 par défaut) pour la salle. Chacun choisit une couleur disponible et clique **Je suis prêt**.
-6. Le compte à rebours commun lance la course.
+3. Dans le salon, choisir **2, 3 ou 4 joueurs** (2 par défaut), puis partager le lien ou le code à six caractères.
+4. Chaque invité ouvre le lien et saisit son pseudo pour rejoindre.
+5. Le créateur coche un ou plusieurs thèmes (**Maths**, **Capitales d’Europe**, **Capitales du monde**, **Culture générale**, **Drapeaux du monde**), puis **3, 5 ou 10 tours** (3 par défaut) pour la salle. Chacun choisit une couleur disponible et clique **Je suis prêt**.
+6. Quand tous les joueurs prévus sont présents, connectés et prêts, le compte à rebours commun lance la course.
 
 Depuis le Mac, `localhost` fonctionne également. En développement, l'invitation utilise automatiquement l'adresse privée détectée du Mac pour qu'elle soit ouvrable sur un téléphone. Les appareils doivent pouvoir communiquer sur le réseau local ; les liens locaux ne sont pas accessibles depuis Internet.
 
 ## Règles
 
-En maths, saisir le résultat avec le pavé ou le clavier. En capitales, un pays est affiché avec quatre capitales : cliquer un choix ou utiliser les touches 1 à 4. Le catalogue couvre 51 entrées au-delà de l’UE, avec pays transcontinentaux et Caucase : [périmètre, difficultés et sources](docs/CAPITALES.md).
+En maths, saisir le résultat avec le pavé ou le clavier. Les autres thèmes proposent quatre réponses : cliquer un choix ou utiliser les touches 1 à 4. Europe : 51 pays ; monde et drapeaux : 196 pays ; culture générale : 120 questions (30 par niveau). [Catalogues, règles et sources](docs/THEMES.md). Plusieurs thèmes sont mélangés équitablement ; tous les joueurs reçoivent la même séquence et les mêmes choix.
 
-Les voitures suivent automatiquement le circuit. Les joueurs reçoivent la même séquence et progressent indépendamment. En maths, valider avec OK/Entrée ; un choix de capitale se valide immédiatement. Une erreur conserve la question ; une réussite déclenche un boost de trois secondes, remplacé par chaque nouvelle réussite.
+Les voitures suivent automatiquement le circuit. Les joueurs reçoivent la même séquence et progressent indépendamment. En maths, valider avec OK/Entrée ; un choix de capitale se valide immédiatement. Une erreur bloque toute réponse et le passage, affiche la bonne réponse pendant deux secondes, puis avance automatiquement sans nouveau boost. Cette règle est validée et chronométrée par le serveur, y compris après rechargement. Une réussite déclenche un boost de trois secondes, remplacé par chaque nouvelle réussite.
 
 Après huit secondes, **Passer** permet d'avancer sans nouveau boost. Les calculs passés et les erreurs sont comptés séparément ; leurs corrections sont disponibles à l'arrivée. Les résultats sont figés au premier franchissement.
 
-Une coupure ne met pas la course en pause. Le joueur peut revenir avec le même lien et retrouver sa progression. Après vingt secondes à partir de la détection de déconnexion par le serveur, le joueur encore connecté gagne par abandon ; si les deux sont absents, la course est interrompue. Une liaison silencieuse est détectée par heartbeat, donc le délai total d'une panne peut être plus long. Une déconnexion pendant le compte à rebours annule le départ et remet les deux joueurs non prêts.
+Une coupure ne met pas la course en pause. Le joueur peut revenir avec le même lien et retrouver sa progression. Après vingt secondes à partir de la détection de déconnexion par le serveur, le joueur absent est déclaré en abandon et sa distance est figée. La course continue entre les autres ; le dernier joueur encore en course et connecté gagne par abandon. Si tous abandonnent, la course est interrompue. Revenir après ce délai permet de voir la course mais ne réintègre pas la compétition en cours. Une liaison silencieuse est détectée par heartbeat, donc le délai total d'une panne peut être plus long. Une déconnexion pendant le compte à rebours annule le départ et remet tous les joueurs non prêts.
 
-La revanche nécessite l'accord des deux joueurs. Un autre onglet peut reprendre la session explicitement ; l'ancien onglet est alors suspendu. Les salles expirent après trente minutes sans action de jeu ou reconnexion.
+La revanche nécessite l’accord de tous les joueurs. Un autre onglet peut reprendre la session explicitement ; l'ancien onglet est alors suspendu. Les salles expirent après trente minutes sans action de jeu ou reconnexion.
 
 ## Sons
 
-Les fichiers de `src/audio/` sont conservés : intro dans le menu après un geste, engine1/engine2 pendant le compte à rebours, carstart au départ, bruitdefond en boucle pendant la course et nitro/nitro2 pour les deux voitures. Le bouton muet contrôle le mix et conserve le choix. Les volumes sont centralisés dans `src/audio/samples.ts`. Les deux fichiers nitro fournis sont identiques et restent affectés séparément.
+Les fichiers de `src/audio/` sont conservés : intro dans le menu après un geste, engine1/engine2 pendant le compte à rebours, carstart au départ, bruitdefond en boucle pendant la course et nitro/nitro2 pour les voitures (un canal indépendant par pilote). Le bouton muet contrôle le mix et conserve le choix. Les volumes sont centralisés dans `src/audio/samples.ts`. Les deux fichiers nitro fournis sont identiques et restent affectés séparément.
 
 ## Vérifier
 
@@ -53,6 +53,9 @@ Avec le serveur actif et Chromium Playwright installé :
 npm run test:e2e
 node scripts/check-recovery.mjs
 node scripts/check-capitals.mjs
+node scripts/check-themes.mjs
+node scripts/check-four-players.mjs
+PLAYERS=3 node scripts/check-four-players.mjs
 ```
 
 `GAME_URL` permet de choisir un autre hôte ou port. Le premier scénario effectue une course réelle entre deux sessions indépendantes, dont la durée dépend des réponses. Il couvre les invitations, le départ, les validations, les doublons, la reconnexion, le passage, l'arrivée et la revanche. Le second vérifie la reprise entre onglets, les accès refusés et l'abandon après le délai réel. Captures dans `/tmp/math-racing-*.png`.
@@ -80,7 +83,7 @@ La publication n'est pas effectuée par la simple commande de build. Après publ
 - `src/services/` : création, session et invitation.
 - `src/network/` : connexion, reprise des actions en attente et interpolation des états reçus.
 - `src/hooks/` : session, salle, contrôles et affichage de la course.
-- `src/game/` : rendu Phaser existant, couleurs et voies cohérentes entre les deux téléphones.
+- `src/game/` : rendu Phaser existant, couleurs et voies cohérentes entre tous les téléphones.
 - `src/audio/` : fichiers fournis, synthèse des signaux et mix partagé.
 
 [Architecture et réutilisation de Pendu Battle](docs/ARCHITECTURE.md) · [Validation](docs/VALIDATION.md) · [Références graphiques](docs/REFERENCES-GRAPHIQUES.md) · [Pédagogie](docs/PEDAGOGIE.md).

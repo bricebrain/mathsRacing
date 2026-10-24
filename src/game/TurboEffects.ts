@@ -47,6 +47,11 @@ export class TurboEffects {
       })
       .setDepth(2);
   }
+  setVisible(visible: boolean) {
+    this.flame.setVisible(visible);
+    this.emitter.setVisible(visible);
+    if (!visible) this.emitter.emitting = false;
+  }
   /** Replace la flamme et l'émetteur dans la pile de profondeurs (pont). */
   setDepth(depth: number) {
     this.flame.setDepth(depth + 0.4);

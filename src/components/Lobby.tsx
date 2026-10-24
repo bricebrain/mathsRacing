@@ -1,30 +1,35 @@
+import { PlayerCountSelector } from "./PlayerCountSelector";
 import { GameModeSelector } from "./GameModeSelector";
 import type { GameMode } from "../engine/questions";
 import { useState } from "react";
 import { LapSelector } from "./LapSelector";
-import { CAR_COLORS, type LapCount } from "../engine/config";
+import { CAR_COLORS, type LapCount, type PlayerCount } from "../engine/config";
 import { roomInvite, shareRoom } from "../services/rooms";
 import type { MemberView } from "../shared/protocol";
 export function Lobby({
   code,
-  mode,
-  onMode,
+  themes,
+  onThemes,
   laps,
   onLaps,
   self,
-  opponent,
+  opponents,
+  capacity,
+  onCapacity,
   online,
   onColor,
   onReady,
   onLeave,
 }: {
   code: string;
-  mode: GameMode;
+  themes: GameMode[];
   laps: LapCount;
   onLaps: (laps: LapCount) => void;
-  onMode: (mode: GameMode) => void;
+  onThemes: (theme: GameMode, selected: boolean) => void;
   self?: MemberView;
-  opponent?: MemberView;
+  opponents: MemberView[];
+  capacity: PlayerCount;
+  onCapacity: (capacity: PlayerCount) => void;
   online: boolean;
   onColor: (color: string) => void;
   onReady: () => void;
@@ -34,15 +39,12 @@ export function Lobby({
   return (
     <section className="control-panel lobby-panel">
       <span className="eyebrow">SALLE {code}</span>
-      <h2>
-        À deux sur
-        <br />
-        la ligne de départ.
-      </h2>
-      <GameModeSelector mode={mode} disabled={!online || self?.id !== 0} onChange={onMode} />
+      <PlayerCountSelector capacity={capacity} occupied={opponents.length + 1}
+        disabled={!online || self?.id !== 0} onChange={onCapacity} />
+      <GameModeSelector themes={themes} disabled={!online || self?.id !== 0} onChange={onThemes} />
       <LapSelector laps={laps} disabled={!online || self?.id !== 0} onChange={onLaps} />
       <div className="invite-box">
-        <label htmlFor="invite-link">Invite ton adversaire</label>
+        <label htmlFor="invite-link">Invite les autres pilotes</label>
         <input
           id="invite-link"
           readOnly
@@ -65,12 +67,12 @@ export function Lobby({
       </div>
       <div className="driver-card">
         <div className="driver-avatar" style={{ color: self?.color }}>
-          01
+          {String((self?.id ?? 0) + 1).padStart(2, "0")}
         </div>
         <div>
           <strong>{self?.name ?? "Connexion…"}</strong>
           <span>
-            {self?.ready ? "Prêt pour le départ" : "Choisis ta carrosserie"}
+            {self?.ready ? "Prêt pour le départ" : "En préparation"}
           </span>
         </div>
         {self?.ready && <span className="ready-dot" />}
@@ -82,7 +84,7 @@ export function Lobby({
             key={color}
             aria-label={["Vert citron", "Bleu ciel", "Corail", "Violet"][i]}
             aria-pressed={self?.color === color}
-            disabled={!online || self?.ready || opponent?.color === color}
+            disabled={!online || self?.ready || opponents.some((opponent) => opponent.color === color)}
             onClick={() => onColor(color)}
             style={{ background: color }}
             className={self?.color === color ? "selected" : ""}
@@ -91,24 +93,21 @@ export function Lobby({
           </button>
         ))}
       </fieldset>
-      <div className="opponent">
-        <span className="opponent-icon" style={{ color: opponent?.color }}>
-          02
-        </span>
-        <div>
-          <strong>{opponent?.name ?? "En attente d’un adversaire"}</strong>
-          <span>
-            {opponent
-              ? opponent.connected
-                ? opponent.ready
-                  ? "Prêt pour le départ"
-                  : "A rejoint la salle"
-                : "Hors connexion"
-              : "Partage le lien ou le code ci-dessus"}
+      {Array.from({ length: capacity - 1 }, (_, index) => {
+        const opponent = opponents[index];
+        return <div className="opponent" key={opponent?.id ?? `waiting-${index}`}>
+          <span className="opponent-icon" style={{ color: opponent?.color }}>
+            {String((opponent?.id ?? index + 1) + 1).padStart(2, "0")}
           </span>
-        </div>
-        {opponent?.ready && <span className="ready-dot" />}
-      </div>
+          <div>
+            <strong>{opponent?.name ?? "En attente d’un pilote"}</strong>
+            <span>{opponent ? opponent.connected
+              ? opponent.ready ? "Prêt pour le départ" : "A rejoint la salle"
+              : "Hors connexion" : "Place libre"}</span>
+          </div>
+          {opponent?.ready && <span className="ready-dot" />}
+        </div>;
+      })}
       <button
         className="primary-button"
         disabled={!online || !self}
@@ -117,7 +116,6 @@ export function Lobby({
         {self?.ready ? "Annuler · je ne suis plus prêt" : "Je suis prêt"}{" "}
         <span>↗</span>
       </button>
-      <p className="keyboard-hint">Le départ est commun aux deux pilotes.</p>
       <button className="text-button" onClick={onLeave}>
         Quitter la salle
       </button>

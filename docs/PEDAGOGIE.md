@@ -2,7 +2,7 @@
 
 ## Décision actuelle
 
-Les mathématiques restent en saisie numérique, conformément au brief. L'option Passer après huit secondes a été validée par l'utilisateur : même délai pour les deux joueurs, aucune nouvelle accélération, calcul suivant dans la même séquence. Les calculs erronés ou passés sont revus avec leur correction uniquement à l'arrivée.
+Les mathématiques restent en saisie numérique, conformément au brief. L'option Passer après huit secondes a été validée par l'utilisateur : même délai pour les deux joueurs, aucune nouvelle accélération, calcul suivant dans la même séquence. Après une erreur, la bonne réponse est affichée pendant deux secondes avant le passage automatique à la question suivante, sans nouveau turbo. Cette règle s’applique aux maths et à tous les QCM. Les erreurs et questions passées restent disponibles dans le bilan à l’arrivée.
 
 Le mode Capitales d’Europe est disponible : pays affiché et quatre capitales au choix, au-delà des seuls membres de l’UE. Le [périmètre de 51 entrées, les sources et les difficultés](CAPITALES.md) sont documentés. Le mode est commun aux deux adversaires.
 
@@ -23,7 +23,7 @@ Ces études ne portent pas sur cette course ni directement sur les enfants jouan
 | Découverte des capitales en course mobile | Quatre propositions | Permet de jouer avant une maîtrise complète et évite de mesurer surtout la vitesse de frappe et l'orthographe. |
 | Consolidation des capitales | Réponse libre tolérante, idéalement hors chrono | Rappel sans options, accents/casse/variantes gérés ; feedback et répétitions des erreurs. |
 
-Le QCM conserve, à la demande de l’utilisateur, le même fonctionnement que les maths : erreur comptabilisée, question conservée, turbo à la bonne réponse et correction à l’arrivée. Plusieurs essais peuvent donc mener à un turbo par élimination. Une récompense limitée au premier choix reste une piste d’évolution, non appliquée.
+Le premier choix détermine la récompense : une erreur compte une fois et déclenche deux secondes de correction sans nouvelle tentative ni passage possible. Le serveur conserve ce délai après une reconnexion. Les thèmes monde, culture générale et drapeaux peuvent être combinés avec les maths et l’Europe ; les questions alternent équitablement. Voir [les catalogues et règles](THEMES.md).
 
 Une course doit utiliser le même mode et le même format pour les deux adversaires. Éviter un duel où l'un écrit et l'autre voit les propositions. L'entraînement pourrait proposer une progression distincte du mode compétition.
 

@@ -65,6 +65,10 @@ try {
   await answerCurrent(a, 999);
   await until(() => a.state.view.state.players[0].errors === 1);
   const initial = b.state.view.question;
+  await until(() => a.state.view.correction?.operationId === initial.id);
+  assert.equal(await a.page.getByRole("button", { name: "Valider la réponse" }).isDisabled(), true);
+  await until(() => a.state.view.question?.id === initial.id + 1);
+  assert.equal(a.state.view.state.players[0].correct, 0);
   await answerCurrent(a);
   await until(() => a.state.view.state.players[0].correct === 1);
   assert.deepEqual(b.state.view.question, initial);
@@ -78,7 +82,7 @@ try {
   assert.equal(a.state.view.state.players[0].correct, 1);
   await answerCurrent(b);
   await until(() => b.state.view.state.players[1].correct === 1);
-  assert.deepEqual(b.state.view.question, next);
+  assert.equal(b.state.view.question.id, initial.id + 1);
   console.log(
     "Erreurs, validation serveur, progression indépendante et dédoublonnage OK",
   );

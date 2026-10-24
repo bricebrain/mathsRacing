@@ -1,3 +1,4 @@
+import { playerOrder } from "./shared/ranking";
 import { CAR_COLORS } from "./engine/config";
 import { useSession } from "./hooks/useSession";
 import { useNetworkRace } from "./hooks/useNetworkRace";
@@ -10,69 +11,22 @@ import { SessionEntry } from "./components/SessionEntry";
 import { ConnectionNotice } from "./components/ConnectionNotice";
 import { CalculationPanel } from "./components/CalculationPanel";
 import { Results } from "./components/Results";
-import type { PlayerId } from "./shared/protocol";
 export default function App() {
   const session = useSession(),
     game = useNetworkRace(session.session);
   const sound = useRaceAudio(game.race, game.phase, game.countdown);
   const laps = game.view?.state.laps ?? 3;
-  const capitals = game.view?.mode === "capitals";
+  const themes = game.view?.themes ?? [game.view?.mode ?? "math"];
   const isLobby = game.phase === "lobby",
     online = game.connection === "online";
-  const colors: [string, string] = [
-    game.self?.color ?? CAR_COLORS[0],
-    game.opponent?.color ?? CAR_COLORS[1],
-  ];
-  const names: [string, string] = [
-    game.self?.name ?? "Toi",
-    game.opponent?.name ?? "Adversaire",
-  ];
-  const selfId = game.view?.selfId ?? 0,
-    ids: [PlayerId, PlayerId] = [selfId, (1 - selfId) as PlayerId];
+  const capacity = game.view?.capacity ?? 2;
+  const selfId = game.view?.selfId ?? 0;
+  const ids = playerOrder(capacity, selfId);
+  const colors = ids.map((id) => game.view?.members.find((member) => member.id === id)?.color ?? CAR_COLORS[id]);
+  const names = ids.map((id) => game.view?.members.find((member) => member.id === id)?.name ?? `Pilote ${id + 1}`);
   return (
-    <div className={`app phase-${game.phase}`}>
-      <header className="site-header">
-        <a href="/" className="brand" aria-label="Math Racing, accueil">
-          <svg viewBox="0 0 40 36" aria-hidden="true">
-            <path
-              d="M2 28 13 7h8l-5 11L28 7h10L22 28h-8l5-11L9 28Z"
-              fill="currentColor"
-            />
-          </svg>
-          <span>
-            MATH<span>RACING</span>
-          </span>
-        </a>
-        <div className="header-right">
-          <span className="local-status">
-            <i /> MULTIJOUEUR
-          </span>
-          <span className="version">V0.2</span>
-        </div>
-      </header>
+    <div className={`app phase-${game.phase} players-${capacity}`}>
       <main>
-        <div className="page-heading">
-          <div>
-            <span className="eyebrow">
-              {capitals
-                ? "DES CAPITALES. DU TURBO. DU DUEL."
-                : "DU CALCUL. DU TURBO. DU DUEL."}
-            </span>
-            <h1>
-              {capitals
-                ? "Les capitales donnent le rythme."
-                : isLobby
-                  ? "La victoire se calcule."
-                  : "Fais parler les chiffres."}
-            </h1>
-          </div>
-          <span className="session-tag">
-            {session.session
-              ? `SALLE ${session.session.code}`
-              : "COURSE À DEUX"}{" "}
-            <b>01</b>
-          </span>
-        </div>
         {session.session && (
           <ConnectionNotice
             status={game.connection}
@@ -83,27 +37,10 @@ export default function App() {
         )}
         <div className="game-layout">
           <section className="circuit-card" aria-label="Course">
-            <div className="circuit-topbar">
-              <div>
-                <span className="live-dot" /> LES PINS{" "}
-                <span className="circuit-subtitle">/ CIRCUIT 01</span>
-              </div>
-              <div className="circuit-actions">
-                <span>
-                  {laps} TOURS <i>•</i> {isLobby ? "DÉPART À DEUX" : "DUEL EN LIGNE"}
-                </span>
-                <SoundToggle
-                  enabled={sound.enabled}
-                  available={sound.available}
-                  onToggle={sound.toggle}
-                />
-              </div>
+            <div className="race-summary">
+              <Scoreboard state={game.race.current} colors={colors} names={names} />
+              <SoundToggle enabled={sound.enabled} available={sound.available} onToggle={sound.toggle} />
             </div>
-            <Scoreboard
-              state={game.race.current}
-              colors={colors}
-              names={names}
-            />
             <div className="track-container">
               <RaceCanvas
                 source={{
@@ -113,36 +50,11 @@ export default function App() {
                   active: game.phase === "racing",
                 }}
               />
-              {isLobby && (
-                <div className="track-caption">
-                  <span className="track-number">01</span>
-                  <div>
-                    <span className="eyebrow">
-                      LE PREMIER VIRAGE VERS LA VICTOIRE
-                    </span>
-                    <strong>Les Pins</strong>
-                    <span>{laps} tours. Deux pilotes. Un seul vainqueur.</span>
-                  </div>
-                </div>
-              )}
               {game.phase === "countdown" && (
                 <div className="countdown-overlay">
-                  <span>EN POSITION</span>
                   <strong key={game.countdown}>{game.countdown}</strong>
-                  <p>Une bonne réponse. Un coup d’avance.</p>
                 </div>
               )}
-            </div>
-            <div className="track-footer">
-              <span>
-                <i style={{ background: colors[0] }} />
-                {names[0]}{" "}
-                <i className="coral-dot" style={{ background: colors[1] }} />
-                {names[1]}
-              </span>
-              <span>
-                VUE DU DESSUS <b>↗</b>
-              </span>
             </div>
           </section>
           {!session.session ? (
@@ -159,12 +71,14 @@ export default function App() {
           ) : isLobby ? (
             <Lobby
               code={session.session.code}
-              mode={game.view?.mode ?? "math"}
-              onMode={game.setMode}
+              themes={themes}
+              onThemes={game.setTheme}
               laps={laps}
               onLaps={game.setLaps}
               self={game.self}
-              opponent={game.opponent}
+              opponents={game.opponents}
+              capacity={capacity}
+              onCapacity={game.setCapacity}
               online={online}
               onColor={game.setColor}
               onReady={() => {
@@ -177,6 +91,7 @@ export default function App() {
             <CalculationPanel
               state={game.race.current}
               operation={game.view?.question ?? null}
+              correction={game.view?.correction ?? null}
               input={game.input}
               feedback={game.feedback}
               active={game.active}
@@ -186,19 +101,13 @@ export default function App() {
             />
           )}
         </div>
-        <footer className="page-footer">
-          <span>La bonne trajectoire commence par la bonne réponse.</span>
-          <span>
-            {capitals ? "51 pays d’Europe · 4 choix" : "100 % calcul mental"} <i>·</i> 0 % pilotage
-          </span>
-        </footer>
       </main>
       {game.phase === "finished" && (
         <Results
           state={game.race.current}
           review={game.view?.review ?? []}
-          mode={game.view?.mode ?? "math"}
-          opponent={names[1]}
+          themes={themes}
+          names={names}
           rematch={game.self?.rematch ?? false}
           disabled={!online}
           reason={game.view?.reason ?? null}

@@ -14,13 +14,6 @@ export function SessionEntry({
     [code, setCode] = useState(invite);
   return (
     <section className="control-panel session-entry">
-      <span className="eyebrow">DUEL À DEUX JOUEURS</span>
-      <h2>
-        Invite ton rival.
-        <br />
-        Réponds. Accélère.
-      </h2>
-      <p className="muted">Maths ou capitales d’Europe. Chacun sur son téléphone, sur le même circuit.</p>
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -83,9 +76,6 @@ export function SessionEntry({
           </p>
         )}
       </form>
-      <p className="keyboard-hint">
-        Une course démarre quand les deux pilotes sont prêts.
-      </p>
     </section>
   );
 }

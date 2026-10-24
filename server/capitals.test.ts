@@ -49,7 +49,8 @@ describe("mode partagé de la salle", () => {
     expect(roomView(room, 0, [0, 1], now + 5000).review).toEqual([]);
     applyRoomAction(room, 0, { ...action, actionId: crypto.randomUUID(), value: String(answer(question)) },
       room.startsAt! + 1500, [0, 1]);
-    expect(room.race!.players[0].correct).toBe(1);
+    expect(room.race!.players[0].correct).toBe(0);
+    expect(room.race!.players[0].errors).toBe(1);
     advanceRoom(room, room.startsAt! + 70000);
     expect(roomView(room, 0, [0, 1], now + 80000).review[0].answer).toBe(answerLabel(question));
     expect(roomView(room, 1, [0, 1], now + 80000).review).toEqual([]);

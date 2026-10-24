@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { raceRank } from "../shared/ranking";
 import { RaceAudio } from "../audio/RaceAudio";
 import type { DisplayRace, Phase } from "../shared/protocol";
 export function useRaceAudio(
@@ -36,7 +37,7 @@ export function useRaceAudio(
     if (phase === "countdown") service.current?.countdown(countdown);
     if (phase === "racing") service.current?.countdown(0);
     if (phase === "finished")
-      service.current?.finish(race.current.winner === 0);
+      service.current?.finish(race.current.winners.includes(0));
   }, [phase, countdown, race]);
   useEffect(() => {
     const audio = service.current;
@@ -47,7 +48,7 @@ export function useRaceAudio(
     let correct = race.current.players.map((player) => player.correct),
       errors = initial.errors,
       skipped = initial.skipped;
-    let lead = 0;
+    let rank = raceRank(race.current, 0);
     const update = (now: number) => {
       if (now - lastAt > 45) {
         lastAt = now;
@@ -59,10 +60,9 @@ export function useRaceAudio(
           });
           if (player.errors > errors) audio.wrong();
           if (player.skipped > skipped) audio.skip();
-          const gap = player.distance - state.players[1].distance;
-          const nextLead = Math.abs(gap) > 5 ? Math.sign(gap) : lead;
-          if (lead && nextLead !== lead) audio.overtake();
-          lead = nextLead;
+          const nextRank = raceRank(state, 0);
+          if (nextRank < rank) audio.overtake();
+          rank = nextRank;
           correct = state.players.map((p) => p.correct);
           errors = player.errors;
           skipped = player.skipped;

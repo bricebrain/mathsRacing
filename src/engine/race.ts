@@ -1,7 +1,6 @@
-import { DIFFICULTIES, RACE, raceDistance, sequenceLength, type LapCount } from "./config";
-import { makeSequence } from "./math";
-import { makeCapitalSequence } from "./capitals";
-import { answer, isCapital, type Question, type GameMode } from "./questions";
+import { DIFFICULTIES, RACE, raceDistance, sequenceLength, type LapCount, type PlayerCount } from "./config";
+import { makeQuestionSequence } from "./sequences";
+import { answer, isChoice, type Question, type GameMode } from "./questions";
 export interface Racer {
   distance: number;
   index: number;
@@ -9,18 +8,21 @@ export interface Racer {
   correct: number;
   skipped: number;
   questionAt: number;
+  correctionUntil: number | null;
   reviewIds: number[];
   boost: number;
   boostAt: number;
   lastAttempt: number;
   finishedAt: number | null;
+  eliminatedAt: number | null;
 }
 export interface RaceState {
   laps: LapCount;
   sequence: Question[];
-  players: [Racer, Racer];
+  players: Racer[];
   time: number;
   winner: number | null;
+  winners: number[];
 }
 const racer = (): Racer => ({
   distance: 0,
@@ -29,20 +31,21 @@ const racer = (): Racer => ({
   correct: 0,
   skipped: 0,
   questionAt: 0,
+  correctionUntil: null,
   reviewIds: [],
   boost: 0,
   boostAt: -RACE.boostDuration - RACE.fadeDuration,
   lastAttempt: -RACE.submitDelay,
   finishedAt: null,
+  eliminatedAt: null,
 });
-export const createRace = (seed: number, mode: GameMode = "math", laps: LapCount = 3): RaceState => ({
+export const createRace = (seed: number, mode: GameMode | readonly GameMode[] = "math", laps: LapCount = 3, playerCount: PlayerCount = 2): RaceState => ({
   laps,
-  sequence: mode === "capitals"
-    ? makeCapitalSequence(seed, sequenceLength(laps))
-    : makeSequence(seed, sequenceLength(laps)),
-  players: [racer(), racer()],
+  sequence: makeQuestionSequence(seed, sequenceLength(laps), typeof mode === "string" ? [mode] : mode),
+  players: Array.from({ length: playerCount }, racer),
   time: 0,
   winner: null,
+  winners: [],
 });
 export function boostAt(
   player: Pick<Racer, "boost" | "boostAt">,
@@ -84,11 +87,11 @@ export function advance(state: RaceState, time: number) {
   const totalDistance = raceDistance(state.laps);
   const previous = state.time;
   const distanceAt = (player: Racer, at: number) =>
-    player.distance +
+    player.distance + (player.eliminatedAt != null ? 0 :
     (RACE.baseSpeed / 1000) *
-      (at - previous + boostArea(player, at) - boostArea(player, previous));
+      (at - previous + boostArea(player, at) - boostArea(player, previous)));
   const arrivals = state.players.map((player) => {
-    if (distanceAt(player, time) < totalDistance) return null;
+    if (player.eliminatedAt != null || distanceAt(player, time) < totalDistance) return null;
     let low = previous,
       high = time;
     for (let i = 0; i < 32; i++) {
@@ -108,14 +111,21 @@ export function advance(state: RaceState, time: number) {
     const finished = arrivedAt !== null && arrivedAt - stopAt < 0.01;
     player.distance = finished ? totalDistance : distanceAt(player, stopAt);
     player.finishedAt = finished ? arrivedAt : null;
+    if (player.eliminatedAt == null && player.correctionUntil != null && stopAt >= player.correctionUntil) {
+      player.index++;
+      player.questionAt = player.correctionUntil;
+      player.correctionUntil = null;
+    }
   });
   state.time = stopAt;
   const finishers = state.players
     .map((player, index) => ({ index, at: player.finishedAt }))
     .filter((player) => player.at !== null)
     .sort((a, b) => a.at! - b.at!);
-  if (finishers.length)
-    state.winner = finishers.length === 2 ? -1 : finishers[0].index;
+  if (finishers.length) {
+    state.winners = finishers.map((player) => player.index);
+    state.winner = finishers.length > 1 ? -1 : finishers[0].index;
+  }
 }
 
 export function submit(
@@ -127,18 +137,22 @@ export function submit(
 ): "correct" | "wrong" | "ignored" {
   advance(state, time);
   const p = state.players[playerIndex],
-    op = state.sequence[p.index];
+    op = p && state.sequence[p.index];
   if (
     state.winner !== null ||
+    !p ||
     !op ||
+    p.eliminatedAt != null ||
+    p.correctionUntil != null ||
     op.id !== operationId ||
-    !(isCapital(op) ? /^[0-3]$/.test(value) : /^\d{1,3}$/.test(value)) ||
+    !(isChoice(op) ? /^[0-3]$/.test(value) : /^\d{1,3}$/.test(value)) ||
     time - p.lastAttempt < RACE.submitDelay
   )
     return "ignored";
   p.lastAttempt = time;
   if (Number(value) !== answer(op)) {
     p.errors++;
+    p.correctionUntil = time + RACE.correctionDuration;
     if (!p.reviewIds.includes(op.id)) p.reviewIds.push(op.id);
     return "wrong";
   }
@@ -163,10 +177,13 @@ export function skipOperation(
 ): boolean {
   advance(state, time);
   const player = state.players[playerIndex];
-  const operation = state.sequence[player.index];
+  const operation = player && state.sequence[player.index];
   if (
     state.winner !== null ||
+    !player ||
     !operation ||
+    player.eliminatedAt != null ||
+    player.correctionUntil != null ||
     operation.id !== operationId ||
     skipRemaining(player, time) > 0 ||
     time - player.lastAttempt < RACE.submitDelay

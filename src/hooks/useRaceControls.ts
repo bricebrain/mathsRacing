@@ -1,4 +1,4 @@
-import { isCapital } from "../engine/questions";
+import { isChoice } from "../engine/questions";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Phase } from "../shared/protocol";
 import { createActionId } from "../utils/actionId";
@@ -15,7 +15,8 @@ export function useRaceControls(
     phase === "racing" &&
     room.connection === "online" &&
     !!room.view?.question &&
-    !pending;
+    !pending &&
+    !room.view?.correction;
   useEffect(() => {
     setInput("");
     setFeedback("");
@@ -66,7 +67,7 @@ export function useRaceControls(
   const key = useCallback(
     (value: string) => {
       if (!available) return;
-      if (room.view?.question && isCapital(room.view.question)) {
+      if (room.view?.question && isChoice(room.view.question)) {
         if (/^[1-4]$/.test(value)) submit("answer", String(Number(value) - 1));
         return;
       }
@@ -85,7 +86,7 @@ export function useRaceControls(
         event.target instanceof HTMLInputElement
       )
         return;
-      if (room.view?.question && isCapital(room.view.question) &&
+      if (room.view?.question && isChoice(room.view.question) &&
         !/^[1-4]$/.test(event.key)) return;
       const control =
         event.target instanceof HTMLElement &&
@@ -120,7 +121,7 @@ export function useRaceControls(
     pending,
     key,
     choose: (index: number) => {
-      if (room.view?.question && isCapital(room.view.question) &&
+      if (room.view?.question && isChoice(room.view.question) &&
         Number.isInteger(index) && index >= 0 && index < 4)
         submit("answer", String(index));
     },

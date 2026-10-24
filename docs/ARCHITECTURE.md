@@ -10,7 +10,7 @@ Math Racing est un Worker et un namespace de salles distincts. Aucune écriture 
 
 ## Autorité serveur
 
-`server/model.ts` définit la salle et ses deux membres. `server/match.ts` applique les règles, crée une seule séquence à chaque partie, déclenche le départ commun et détermine l'arrivée/abandon. `src/engine/` conserve le moteur testé indépendamment de Phaser. Les sentinelles initiales des boosts et tentatives sont des nombres finis compatibles JSON.
+`server/model.ts` définit la salle et ses deux à quatre membres. `server/match.ts` applique les règles, crée une seule séquence à chaque partie, déclenche le départ commun et détermine l'arrivée/abandon. `src/engine/` conserve le moteur testé indépendamment de Phaser. Les sentinelles initiales des boosts et tentatives sont des nombres finis compatibles JSON.
 
 `RacingRoom` reçoit les commandes, authentifie l'identité par jeton et conserve les connexions avec l'API d'hibernation WebSocket. L'état est lu depuis SQLite à chaque traitement ; les mutations sont sauvegardées avant diffusion. `roomStorage.ts` centralise ces opérations synchrones. Une alarme périodique produit les états pendant la course ; aucun envoi de position à chaque frame.
 
@@ -30,17 +30,17 @@ Les messages sont validés par Zod côté serveur (`validation.ts`) et bornés �
 
 `RaceInterpolator` conserve un historique borné, interpole les distances avec un retard d'affichage de 180 ms et plafonne la prédiction à 400 ms. Il ne crée jamais de gagnant et attend le résultat du serveur. L'horloge du téléphone est rapprochée de celle du serveur par ping/pong et mesure de trajet ; elle ne fait pas autorité sur les règles.
 
-L'interface présente toujours le joueur local en premier. Le rendu utilise toutefois les identités globales 0/1 pour attribuer les voies et numéros : les deux téléphones voient les voitures sur les mêmes trajectoires. Couleurs, pseudonymes et résultats sont fournis par le serveur.
+L'interface présente toujours le joueur local en premier. Le rendu utilise toutefois les identités globales 0/1/2/3 pour attribuer les voies et numéros : tous les téléphones voient les voitures sur les mêmes trajectoires. Couleurs, pseudonymes et résultats sont fournis par le serveur.
 
 ## Connexions et cycle de vie
 
-- Deux joueurs connectés et prêts sont nécessaires au départ.
+- Le créateur choisit une capacité de 2, 3 ou 4 joueurs ; tous les joueurs prévus doivent être présents, connectés et prêts au départ. Une réduction sous le nombre de membres présents est refusée.
 - Une déconnexion pendant le compte à rebours annule le départ.
 - La course continue pendant une coupure et les validations hors ligne sont désactivées.
 - Une reprise restaure identité, question, compteurs et progression ; aucun nouveau départ.
-- Après vingt secondes suivant la détection serveur, victoire par abandon si un seul joueur manque, sinon interruption. Le heartbeat détecte aussi les connexions devenues silencieuses.
+- Après vingt secondes suivant la détection serveur, le pilote absent est déclaré en abandon. Les autres continuent à plusieurs ; le dernier pilote encore en course et connecté gagne, et l’absence de tout pilote éligible interrompt la course. Le heartbeat détecte aussi les connexions devenues silencieuses.
 - L'arrivée effective avant l'expiration du délai prime sur l'abandon.
-- Deux consentements sont nécessaires à une revanche ; nouvel identifiant et nouvelle séquence.
+- Les consentements de tous les membres sont nécessaires à une revanche ; nouvel identifiant et nouvelle séquence.
 - TTL de salle : trente minutes, rafraîchi par les actions ou authentifications.
 
 ## Développement et publication
@@ -53,6 +53,20 @@ La publication publique doit être effectuée séparément avec `cf deploy`. La 
 
 ## Règles et pédagogie conservées
 
-Trois tours de 1050 m logiques, vitesse normale 52 m/s, boosts +15/+30/+50/+75 % pendant trois secondes avec fondu de 650 ms, protection de 300 ms entre tentatives et passage après huit secondes. Le classificateur reste déterministe ; multiplications limitées aux tables 1–10 et résultats non négatifs. Les capitales restent une proposition future.
+Trois, cinq ou dix tours de 1050 m logiques (trois par défaut), vitesse normale 52 m/s, boosts +15/+30/+50/+75 % pendant trois secondes avec fondu de 650 ms, protection de 300 ms entre tentatives et passage après huit secondes. Le classificateur reste déterministe ; multiplications limitées aux tables 1–10 et résultats non négatifs. Les cinq thèmes sont combinables ; les questions sont mélangées équitablement. Une erreur déclenche deux secondes de correction puis un passage automatique, sans nouveau turbo. Le délai est persisté et validé côté serveur. La correction n’est révélée qu’au joueur concerné.
 
 Le prototype local avec adversaire automatique a été remplacé. Les améliorations graphiques et les MP3 présents sont conservés.
+
+## Courses à trois ou quatre
+
+La liste des voitures et les états publics ont une taille variable. L’ordre de présentation place toujours le joueur local en premier, sans changer les identités serveur : voies, numéros et couleurs restent identiques sur tous les écrans. Le classement donne la priorité aux gagnants, puis aux pilotes encore en course, puis aux abandons. Les égalités partielles sont représentées par la liste `winners` ; `winner = -1` reste compatible avec le protocole précédent.
+
+Les abandons sont traités dans l’ordre chronologique de leurs échéances. La simulation avance jusqu’à chaque échéance avant de figer le pilote concerné. Une arrivée antérieure reste prioritaire. Le jeu continue à plusieurs, le dernier pilote encore en course et connecté gagne par abandon, et aucun gagnant n’est attribué si tous dépassent le délai. Une reconnexion tardive ne supprime pas l’abandon.
+
+La lecture de l’état d’une salle lors d’une inscription se fait après la lecture asynchrone du corps HTTP ; attribution de place et sauvegarde SQLite restent dans la même section synchrone. Cela évite que des inscriptions simultanées utilisent la même identité. Les anciennes salles sont restaurées avec une capacité de deux joueurs par défaut.
+
+## Affichage selon la surface disponible
+
+L’écran de jeu conserve le classement, le circuit et les contrôles, sans bandeau, titre décoratif ni consignes. `styles/viewport.css` attribue la surface restante au circuit : contrôles à droite sur ordinateur et en paysage court, en dessous sur téléphone. Les réglages de salle peuvent défiler dans leur panneau. Le son reste accessible à côté du classement.
+
+`RaceCanvas` observe les changements de taille de son conteneur pour recalculer le rendu Phaser sans recréer la partie. Le circuit conserve ses proportions et reste visible en entier. L’asphalte passe de 74 à 98 unités, avec bordures, pont et grille de départ élargis ; les quatre voies visuelles sont espacées de 24 unités. Ces dimensions ne modifient ni distances, ni vitesse, ni classement côté serveur.

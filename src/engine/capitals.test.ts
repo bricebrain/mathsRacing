@@ -34,7 +34,7 @@ describe("course des capitales d’Europe", () => {
     });
     expect(positions.size).toBe(4);
   });
-  it("valide seulement les quatre choix et garde la question après une erreur", () => {
+  it("valide seulement les quatre choix et impose deux secondes de correction", () => {
     const state = createRace(42, "capitals");
     const question = makeCapitalSequence(42)[0];
     const correct = capitalAnswer(question);
@@ -45,10 +45,19 @@ describe("course des capitales d’Europe", () => {
     expect(state.players[0].index).toBe(0);
     expect(state.players[0].boost).toBe(0);
     expect(submit(state, 0, String(correct), 0, 1100)).toBe("ignored");
-    expect(submit(state, 0, String(correct), 0, 1400)).toBe("correct");
-    expect(state.players[0].boost).toBe(DIFFICULTIES[question.difficulty].boost);
+    expect(submit(state, 0, String(correct), 0, 1400)).toBe("ignored");
+    expect(state.players[0].correctionUntil).toBe(3000);
+    expect(skipOperation(state, 0, 0, 2000)).toBe(false);
+    advance(state, 2999);
+    expect(state.players[0].index).toBe(0);
+    advance(state, 3000);
+    expect(state.players[0].index).toBe(1);
+    expect(state.players[0].boost).toBe(0);
+    const next = makeCapitalSequence(42)[1];
+    expect(submit(state, 0, String(capitalAnswer(next)), 1, 3400)).toBe("correct");
+    expect(state.players[0].boost).toBe(DIFFICULTIES[next.difficulty].boost);
     expect(state.players[0].reviewIds).toEqual([0]);
-    expect(submit(state, 0, String(correct), 0, 1800)).toBe("ignored");
+    expect(submit(state, 0, String(correct), 0, 3800)).toBe("ignored");
     expect(state.players[1].index).toBe(0);
   });
   it("conserve le passage à huit secondes et l’équité des distances", () => {

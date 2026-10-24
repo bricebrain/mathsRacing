@@ -1,10 +1,7 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { correctValue, selectThemes } from "./helpers/quiz.mjs";
 import { chromium } from "@playwright/test";
 import { driver, pause, until } from "./helpers/multiplayer.mjs";
-const source = await readFile(new URL("../src/constants/europeCapitals.ts", import.meta.url), "utf8");
-const capitals = new Map([...source.matchAll(/\["([A-Z]{2})", "[^"]+", "([^"]+)"/g)]
-  .map((match) => [match[1], match[2]]));
 const browser = await chromium.launch();
 try {
   const a = await driver(browser, "Alice Géo");
@@ -12,10 +9,10 @@ try {
   await until(() => a.state.view.members.length === 2);
   assert.equal(a.state.view.state.laps, 3);
   assert.equal(await b.page.getByRole("button", { name: "10 tours", exact: true }).isDisabled(), true);
-  assert.equal(await b.page.getByRole("button", { name: "Capitales d’Europe", exact: true }).isDisabled(), true);
+  assert.equal(await b.page.getByRole("checkbox", { name: "Capitales d’Europe", exact: true }).isDisabled(), true);
   await b.page.getByRole("button", { name: "Je suis prêt" }).click();
   await until(() => a.state.view.members[1].ready);
-  await a.page.getByRole("button", { name: "Capitales d’Europe", exact: true }).click();
+  await selectThemes(a, ["Capitales d’Europe"]);
   await until(() => a.state.view.mode === "capitals" && b.state.view.mode === "capitals");
   assert.ok(a.state.view.members.every((m) => !m.ready));
   for (const laps of [5, 10]) {
@@ -28,7 +25,7 @@ try {
   await a.page.locator(".driver-progress").first().getByText(/\/ 10/).waitFor();
   assert.deepEqual(a.state.view.question, b.state.view.question);
   const question = a.state.view.question;
-  const correct = question.choices.indexOf(capitals.get(question.countryId));
+  const correct = correctValue(question);
   assert.ok(correct >= 0);
   const options = a.page.getByRole("group", { name: /Capitales proposées/ }).getByRole("button");
   assert.equal(await options.count(), 4);
@@ -36,15 +33,22 @@ try {
   await options.nth((correct + 1) % 4).click();
   await until(() => a.state.view.state.players[0].errors === 1);
   assert.equal(a.state.view.question.id, question.id);
-  await pause(350);
-  // Entrée sur un bouton focalisé reste une validation accessible native.
-  await options.nth(correct).focus();
+  await until(() => a.state.view.correction?.operationId === question.id);
+  assert.equal(a.state.view.correction.answer, question.choices[correct]);
+  assert.equal(await options.nth(correct).isDisabled(), true);
+  assert.equal(b.state.view.correction, null);
+  await pause(500);
+  assert.equal(a.state.view.question.id, question.id);
+  await until(() => a.state.view.question?.id === question.id + 1);
+  assert.equal(a.state.view.state.players[0].correct, 0);
+  const next = a.state.view.question;
+  await options.nth(correctValue(next)).focus();
   await a.page.keyboard.press("Enter");
   await until(() => a.state.view.state.players[0].correct === 1);
   assert.equal(b.state.view.question.id, question.id);
   await b.page.keyboard.press(String(correct + 1));
   await until(() => b.state.view.state.players[1].correct === 1);
-  assert.deepEqual(a.state.view.question, b.state.view.question);
+  assert.equal(b.state.view.question.id, next.id);
   console.log("Mode commun, accord annulé au changement, QCM, erreur, Entrée et touches 1–4 OK");
   for (const size of [{ width: 375, height: 667 }, { width: 360, height: 740 }, { width: 390, height: 844 }, { width: 1440, height: 1000 }]) {
     await a.page.setViewportSize(size);

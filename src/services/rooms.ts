@@ -7,7 +7,7 @@ export function loadSession(code: string): Session | null {
     ) as Session | null;
     return session?.code === code &&
       typeof session.token === "string" &&
-      [0, 1].includes(session.playerId)
+      [0, 1, 2, 3].includes(session.playerId)
       ? session
       : null;
   } catch {
@@ -70,7 +70,7 @@ export async function shareRoom(code: string) {
     try {
       await navigator.share({
         title: "Math Racing",
-        text: "Rejoins-moi pour une course de calcul mental !",
+        text: "Rejoins-moi pour une course de connaissances !",
         url,
       });
       return "Invitation partagée !";

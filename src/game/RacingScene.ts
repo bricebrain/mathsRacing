@@ -1,5 +1,6 @@
 import Phaser from "phaser";
-import { RACE } from "../engine/config";
+import { laneOffset } from "./lanes";
+import { RACE, CAR_COLORS } from "../engine/config";
 import { boostAt } from "../engine/race";
 import type { DisplayRace, PlayerId } from "../shared/protocol";
 import { createTrack } from "./track";
@@ -14,8 +15,8 @@ import { SCENERY_ASSETS } from "./assets";
 import { TurboEffects } from "./TurboEffects";
 export interface RenderSource {
   state: DisplayRace;
-  colors: [string, string];
-  ids: [PlayerId, PlayerId];
+  colors: string[];
+  ids: PlayerId[];
   active: boolean;
 }
 export class RacingScene extends Phaser.Scene {
@@ -40,8 +41,8 @@ export class RacingScene extends Phaser.Scene {
     createScenery(this, this.track);
     createGlowTexture(this);
     createShadowTexture(this);
-    [0xb5ef63, 0xff967b].forEach((color, i) => {
-      createCarTexture(this, `car${i}`, color);
+    CAR_COLORS.forEach((color, i) => {
+      createCarTexture(this, `car${i}`, Phaser.Display.Color.HexStringToColor(color).color);
       this.effects.push(new TurboEffects(this));
       this.shadows.push(
         this.add.image(0, 0, "car-shadow").setScale(0.82).setDepth(1),
@@ -51,10 +52,10 @@ export class RacingScene extends Phaser.Scene {
       );
       this.labels.push(
         this.add
-          .text(0, 0, i ? "02" : "01", {
+          .text(0, 0, String(i + 1).padStart(2, "0"), {
             fontFamily: "Arial",
             fontSize: "14px",
-            color: i ? "#ffd0bc" : "#d3ff9e",
+            color,
             backgroundColor: "#172830",
             padding: { x: 6, y: 3 },
           })
@@ -62,44 +63,32 @@ export class RacingScene extends Phaser.Scene {
           .setDepth(8),
       );
     });
-    this.game.canvas.setAttribute(
-      "aria-label",
-      "Circuit Les Pins : deux voitures vues du dessus sur une piste fermée",
-    );
-    // Sonde temporaire de diagnostic (retirée après vérification).
-    this.game.canvas.setAttribute(
-      "data-bridge",
-      JSON.stringify(this.bridge),
-    );
-    this.game.canvas.setAttribute("role", "img");
+
   }
   update() {
     const { state, colors, ids, active } = this.read();
     if (this.carColor !== colors.join()) {
       this.carColor = colors.join();
-      const color = colors[0];
-      const key = `car-${color}`;
-      createCarTexture(
-        this,
-        key,
-        Phaser.Display.Color.HexStringToColor(color).color,
-      );
-      this.cars[0].setTexture(key);
-      const opponent = colors[1];
-      const opponentKey = `car-${opponent}`;
-      createCarTexture(
-        this,
-        opponentKey,
-        Phaser.Display.Color.HexStringToColor(opponent).color,
-      );
-      this.cars[1].setTexture(opponentKey);
+      colors.forEach((color, index) => {
+        const key = `car-${color}`;
+        createCarTexture(this, key, Phaser.Display.Color.HexStringToColor(color).color);
+        this.cars[index].setTexture(key);
+        this.labels[index].setColor(color);
+      });
     }
+    this.cars.forEach((car, index) => {
+      const visible = index < state.players.length;
+      car.setVisible(visible);
+      this.labels[index].setVisible(visible);
+      this.shadows[index].setVisible(visible);
+      this.effects[index].setVisible(visible);
+    });
     state.players.forEach((p, i) => {
       const pos = this.track.sample(
         p.distance / RACE.lapLength,
-        ids[i] === 1 ? -17 : 17,
+        laneOffset(ids[i], state.players.length),
       );
-      const turbo = active ? boostAt(p, state.time) : 0;
+      const turbo = active && p.eliminatedAt == null ? boostAt(p, state.time) : 0;
       // Sur le pont, la voiture passe au-dessus du calque ; dessous, elle disparaît
       // sous le tablier.
       const t = (((p.distance / RACE.lapLength) % 1) + 1) % 1;
@@ -108,10 +97,10 @@ export class RacingScene extends Phaser.Scene {
       this.cars[i].setDepth(elevated ? 6 : 3);
       this.shadows[i].setDepth(elevated ? 4.5 : 1);
       this.effects[i].setDepth(elevated ? 5.5 : 2);
-      this.cars[i].setPosition(pos.x, pos.y).setRotation(pos.angle);
+      this.cars[i].setPosition(pos.x, pos.y).setRotation(pos.angle).setAlpha(p.eliminatedAt == null ? 1 : 0.4);
       this.labels[i]
         .setPosition(pos.x, pos.y - 31)
-        .setText(ids[i] === 0 ? "01" : "02");
+        .setText(String(ids[i] + 1).padStart(2, "0"));
       this.shadows[i].setPosition(pos.x + 5, pos.y + 8).setRotation(pos.angle);
       this.effects[i].update(pos, turbo, this.time.now, this.reducedMotion);
     });

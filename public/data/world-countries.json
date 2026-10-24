@@ -1,0 +1,1187 @@
+[
+  {
+    "id": "AD",
+    "country": "Andorre",
+    "capital": "Andorre-la-Vieille",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AE",
+    "country": "Émirats arabes unis",
+    "capital": "Abou Dabi",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AF",
+    "country": "Afghanistan",
+    "capital": "Kaboul",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AG",
+    "country": "Antigua-et-Barbuda",
+    "capital": "Saint John's",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AL",
+    "country": "Albanie",
+    "capital": "Tirana",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AM",
+    "country": "Arménie",
+    "capital": "Erevan",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AO",
+    "country": "Angola",
+    "capital": "Luanda",
+    "difficulty": "hard"
+  },
+  {
+    "id": "AR",
+    "country": "Argentine",
+    "capital": "Buenos Aires",
+    "difficulty": "medium"
+  },
+  {
+    "id": "AT",
+    "country": "Autriche",
+    "capital": "Vienne",
+    "difficulty": "easy"
+  },
+  {
+    "id": "AU",
+    "country": "Australie",
+    "capital": "Canberra",
+    "difficulty": "easy"
+  },
+  {
+    "id": "AZ",
+    "country": "Azerbaïdjan",
+    "capital": "Bakou",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BA",
+    "country": "Bosnie-Herzégovine",
+    "capital": "Sarajevo",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BB",
+    "country": "Barbade",
+    "capital": "Bridgetown",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BD",
+    "country": "Bangladesh",
+    "capital": "Dhaka",
+    "difficulty": "medium"
+  },
+  {
+    "id": "BE",
+    "country": "Belgique",
+    "capital": "Bruxelles",
+    "difficulty": "easy"
+  },
+  {
+    "id": "BF",
+    "country": "Burkina Faso",
+    "capital": "Ouagadougou",
+    "difficulty": "medium"
+  },
+  {
+    "id": "BG",
+    "country": "Bulgarie",
+    "capital": "Sofia",
+    "difficulty": "medium"
+  },
+  {
+    "id": "BH",
+    "country": "Bahreïn",
+    "capital": "Manama",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BI",
+    "country": "Burundi",
+    "capital": "Gitega",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BJ",
+    "country": "Bénin",
+    "capital": "Porto-Novo",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BN",
+    "country": "Brunei",
+    "capital": "Bandar Seri Begawan",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BO",
+    "country": "Bolivie",
+    "capital": "Sucre",
+    "difficulty": "hard",
+    "prompt": "Quelle est la capitale constitutionnelle de ce pays ?"
+  },
+  {
+    "id": "BR",
+    "country": "Brésil",
+    "capital": "Brasília",
+    "difficulty": "easy"
+  },
+  {
+    "id": "BS",
+    "country": "Bahamas",
+    "capital": "Nassau",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BT",
+    "country": "Bhoutan",
+    "capital": "Thimphu",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BW",
+    "country": "Botswana",
+    "capital": "Gaborone",
+    "difficulty": "hard"
+  },
+  {
+    "id": "BY",
+    "country": "Biélorussie",
+    "capital": "Minsk",
+    "difficulty": "medium"
+  },
+  {
+    "id": "BZ",
+    "country": "Belize",
+    "capital": "Belmopan",
+    "difficulty": "hard"
+  },
+  {
+    "id": "CA",
+    "country": "Canada",
+    "capital": "Ottawa",
+    "difficulty": "easy"
+  },
+  {
+    "id": "CD",
+    "country": "République démocratique du Congo",
+    "capital": "Kinshasa",
+    "difficulty": "medium"
+  },
+  {
+    "id": "CF",
+    "country": "République centrafricaine",
+    "capital": "Bangui",
+    "difficulty": "hard"
+  },
+  {
+    "id": "CG",
+    "country": "République du Congo",
+    "capital": "Brazzaville",
+    "difficulty": "medium"
+  },
+  {
+    "id": "CH",
+    "country": "Suisse",
+    "capital": "Berne",
+    "difficulty": "easy",
+    "prompt": "Quelle est la ville fédérale de ce pays ?"
+  },
+  {
+    "id": "CI",
+    "country": "Côte d'Ivoire",
+    "capital": "Yamoussoukro",
+    "difficulty": "medium"
+  },
+  {
+    "id": "CL",
+    "country": "Chili",
+    "capital": "Santiago",
+    "difficulty": "medium"
+  },
+  {
+    "id": "CM",
+    "country": "Cameroun",
+    "capital": "Yaoundé",
+    "difficulty": "medium"
+  },
+  {
+    "id": "CN",
+    "country": "Chine",
+    "capital": "Pékin",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "CO",
+    "country": "Colombie",
+    "capital": "Bogotá",
+    "difficulty": "medium"
+  },
+  {
+    "id": "CR",
+    "country": "Costa Rica",
+    "capital": "San José",
+    "difficulty": "hard"
+  },
+  {
+    "id": "CU",
+    "country": "Cuba",
+    "capital": "La Havane",
+    "difficulty": "medium"
+  },
+  {
+    "id": "CV",
+    "country": "Cap-Vert",
+    "capital": "Praia",
+    "difficulty": "hard"
+  },
+  {
+    "id": "CY",
+    "country": "Chypre",
+    "capital": "Nicosie",
+    "difficulty": "hard"
+  },
+  {
+    "id": "CZ",
+    "country": "Tchéquie",
+    "capital": "Prague",
+    "difficulty": "medium"
+  },
+  {
+    "id": "DE",
+    "country": "Allemagne",
+    "capital": "Berlin",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "DJ",
+    "country": "Djibouti",
+    "capital": "Djibouti",
+    "difficulty": "hard"
+  },
+  {
+    "id": "DK",
+    "country": "Danemark",
+    "capital": "Copenhague",
+    "difficulty": "medium"
+  },
+  {
+    "id": "DM",
+    "country": "Dominique",
+    "capital": "Roseau",
+    "difficulty": "hard"
+  },
+  {
+    "id": "DO",
+    "country": "République dominicaine",
+    "capital": "Saint-Domingue",
+    "difficulty": "hard"
+  },
+  {
+    "id": "DZ",
+    "country": "Algérie",
+    "capital": "Alger",
+    "difficulty": "easy"
+  },
+  {
+    "id": "EC",
+    "country": "Équateur",
+    "capital": "Quito",
+    "difficulty": "hard"
+  },
+  {
+    "id": "EE",
+    "country": "Estonie",
+    "capital": "Tallinn",
+    "difficulty": "hard"
+  },
+  {
+    "id": "EG",
+    "country": "Égypte",
+    "capital": "Le Caire",
+    "difficulty": "easy"
+  },
+  {
+    "id": "ER",
+    "country": "Érythrée",
+    "capital": "Asmara",
+    "difficulty": "hard"
+  },
+  {
+    "id": "ES",
+    "country": "Espagne",
+    "capital": "Madrid",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "ET",
+    "country": "Éthiopie",
+    "capital": "Addis-Abeba",
+    "difficulty": "hard"
+  },
+  {
+    "id": "FI",
+    "country": "Finlande",
+    "capital": "Helsinki",
+    "difficulty": "medium"
+  },
+  {
+    "id": "FJ",
+    "country": "Fidji",
+    "capital": "Suva",
+    "difficulty": "hard"
+  },
+  {
+    "id": "FM",
+    "country": "Micronésie",
+    "capital": "Palikir",
+    "difficulty": "hard"
+  },
+  {
+    "id": "FR",
+    "country": "France",
+    "capital": "Paris",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "GA",
+    "country": "Gabon",
+    "capital": "Libreville",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GB",
+    "country": "Royaume-Uni",
+    "capital": "Londres",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "GD",
+    "country": "Grenade",
+    "capital": "Saint-Georges",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GE",
+    "country": "Géorgie",
+    "capital": "Tbilissi",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GH",
+    "country": "Ghana",
+    "capital": "Accra",
+    "difficulty": "medium"
+  },
+  {
+    "id": "GM",
+    "country": "Gambie",
+    "capital": "Banjul",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GN",
+    "country": "Guinée",
+    "capital": "Conakry",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GQ",
+    "country": "Guinée équatoriale",
+    "capital": "Ciudad de la Paz",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GR",
+    "country": "Grèce",
+    "capital": "Athènes",
+    "difficulty": "easy"
+  },
+  {
+    "id": "GT",
+    "country": "Guatemala",
+    "capital": "Guatemala",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GW",
+    "country": "Guinée-Bissau",
+    "capital": "Bissau",
+    "difficulty": "hard"
+  },
+  {
+    "id": "GY",
+    "country": "Guyana",
+    "capital": "Georgetown",
+    "difficulty": "hard"
+  },
+  {
+    "id": "HN",
+    "country": "Honduras",
+    "capital": "Tegucigalpa",
+    "difficulty": "hard"
+  },
+  {
+    "id": "HR",
+    "country": "Croatie",
+    "capital": "Zagreb",
+    "difficulty": "medium"
+  },
+  {
+    "id": "HT",
+    "country": "Haïti",
+    "capital": "Port-au-Prince",
+    "difficulty": "hard"
+  },
+  {
+    "id": "HU",
+    "country": "Hongrie",
+    "capital": "Budapest",
+    "difficulty": "medium"
+  },
+  {
+    "id": "ID",
+    "country": "Indonésie",
+    "capital": "Jakarta",
+    "difficulty": "medium"
+  },
+  {
+    "id": "IE",
+    "country": "Irlande",
+    "capital": "Dublin",
+    "difficulty": "easy"
+  },
+  {
+    "id": "IL",
+    "country": "Israël",
+    "capital": "Jérusalem",
+    "difficulty": "medium",
+    "prompt": "Dans quelle ville siège le Parlement de ce pays ?"
+  },
+  {
+    "id": "IN",
+    "country": "Inde",
+    "capital": "New Delhi",
+    "difficulty": "easy"
+  },
+  {
+    "id": "IQ",
+    "country": "Irak",
+    "capital": "Bagdad",
+    "difficulty": "medium"
+  },
+  {
+    "id": "IR",
+    "country": "Iran",
+    "capital": "Téhéran",
+    "difficulty": "medium"
+  },
+  {
+    "id": "IS",
+    "country": "Islande",
+    "capital": "Reykjavik",
+    "difficulty": "hard"
+  },
+  {
+    "id": "IT",
+    "country": "Italie",
+    "capital": "Rome",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "JM",
+    "country": "Jamaïque",
+    "capital": "Kingston",
+    "difficulty": "hard"
+  },
+  {
+    "id": "JO",
+    "country": "Jordanie",
+    "capital": "Amman",
+    "difficulty": "hard"
+  },
+  {
+    "id": "JP",
+    "country": "Japon",
+    "capital": "Tokyo",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "KE",
+    "country": "Kenya",
+    "capital": "Nairobi",
+    "difficulty": "medium"
+  },
+  {
+    "id": "KG",
+    "country": "Kirghizistan",
+    "capital": "Bichkek",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KH",
+    "country": "Cambodge",
+    "capital": "Phnom Penh",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KI",
+    "country": "Kiribati",
+    "capital": "Tarawa-Sud",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KM",
+    "country": "Comores",
+    "capital": "Moroni",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KN",
+    "country": "Saint-Christophe-et-Niévès",
+    "capital": "Basseterre",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KP",
+    "country": "Corée du Nord",
+    "capital": "Pyongyang",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KR",
+    "country": "Corée du Sud",
+    "capital": "Séoul",
+    "difficulty": "medium"
+  },
+  {
+    "id": "KW",
+    "country": "Koweït",
+    "capital": "Koweït",
+    "difficulty": "hard"
+  },
+  {
+    "id": "KZ",
+    "country": "Kazakhstan",
+    "capital": "Astana",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LA",
+    "country": "Laos",
+    "capital": "Vientiane",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LB",
+    "country": "Liban",
+    "capital": "Beyrouth",
+    "difficulty": "medium"
+  },
+  {
+    "id": "LC",
+    "country": "Sainte-Lucie",
+    "capital": "Castries",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LI",
+    "country": "Liechtenstein",
+    "capital": "Vaduz",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LK",
+    "country": "Sri Lanka",
+    "capital": "Sri Jayawardenepura Kotte",
+    "difficulty": "hard",
+    "prompt": "Quelle est la capitale administrative de ce pays ?"
+  },
+  {
+    "id": "LR",
+    "country": "Liberia",
+    "capital": "Monrovia",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LS",
+    "country": "Lesotho",
+    "capital": "Maseru",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LT",
+    "country": "Lituanie",
+    "capital": "Vilnius",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LU",
+    "country": "Luxembourg",
+    "capital": "Luxembourg",
+    "difficulty": "easy"
+  },
+  {
+    "id": "LV",
+    "country": "Lettonie",
+    "capital": "Riga",
+    "difficulty": "hard"
+  },
+  {
+    "id": "LY",
+    "country": "Libye",
+    "capital": "Tripoli",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MA",
+    "country": "Maroc",
+    "capital": "Rabat",
+    "difficulty": "easy"
+  },
+  {
+    "id": "MC",
+    "country": "Monaco",
+    "capital": "Monaco",
+    "difficulty": "easy"
+  },
+  {
+    "id": "MD",
+    "country": "Moldavie",
+    "capital": "Chișinău",
+    "difficulty": "hard"
+  },
+  {
+    "id": "ME",
+    "country": "Monténégro",
+    "capital": "Podgorica",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MG",
+    "country": "Madagascar",
+    "capital": "Antananarivo",
+    "difficulty": "medium"
+  },
+  {
+    "id": "MH",
+    "country": "Îles Marshall",
+    "capital": "Majuro",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MK",
+    "country": "Macédoine du Nord",
+    "capital": "Skopje",
+    "difficulty": "hard"
+  },
+  {
+    "id": "ML",
+    "country": "Mali",
+    "capital": "Bamako",
+    "difficulty": "medium"
+  },
+  {
+    "id": "MM",
+    "country": "Birmanie",
+    "capital": "Naypyidaw",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MN",
+    "country": "Mongolie",
+    "capital": "Oulan-Bator",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MR",
+    "country": "Mauritanie",
+    "capital": "Nouakchott",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MT",
+    "country": "Malte",
+    "capital": "La Valette",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MU",
+    "country": "Maurice",
+    "capital": "Port-Louis",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MV",
+    "country": "Maldives",
+    "capital": "Malé",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MW",
+    "country": "Malawi",
+    "capital": "Lilongwe",
+    "difficulty": "hard"
+  },
+  {
+    "id": "MX",
+    "country": "Mexique",
+    "capital": "Mexico",
+    "difficulty": "easy"
+  },
+  {
+    "id": "MY",
+    "country": "Malaisie",
+    "capital": "Kuala Lumpur",
+    "difficulty": "medium"
+  },
+  {
+    "id": "MZ",
+    "country": "Mozambique",
+    "capital": "Maputo",
+    "difficulty": "hard"
+  },
+  {
+    "id": "NA",
+    "country": "Namibie",
+    "capital": "Windhoek",
+    "difficulty": "hard"
+  },
+  {
+    "id": "NE",
+    "country": "Niger",
+    "capital": "Niamey",
+    "difficulty": "hard"
+  },
+  {
+    "id": "NG",
+    "country": "Nigéria",
+    "capital": "Abuja",
+    "difficulty": "medium"
+  },
+  {
+    "id": "NI",
+    "country": "Nicaragua",
+    "capital": "Managua",
+    "difficulty": "hard"
+  },
+  {
+    "id": "NL",
+    "country": "Pays-Bas",
+    "capital": "Amsterdam",
+    "difficulty": "easy"
+  },
+  {
+    "id": "NO",
+    "country": "Norvège",
+    "capital": "Oslo",
+    "difficulty": "medium"
+  },
+  {
+    "id": "NP",
+    "country": "Népal",
+    "capital": "Katmandou",
+    "difficulty": "hard"
+  },
+  {
+    "id": "NR",
+    "country": "Nauru",
+    "capital": "Yaren",
+    "difficulty": "hard",
+    "prompt": "Quel district abrite le siège du gouvernement de ce pays ?"
+  },
+  {
+    "id": "NZ",
+    "country": "Nouvelle-Zélande",
+    "capital": "Wellington",
+    "difficulty": "medium"
+  },
+  {
+    "id": "OM",
+    "country": "Oman",
+    "capital": "Mascate",
+    "difficulty": "hard"
+  },
+  {
+    "id": "PA",
+    "country": "Panama",
+    "capital": "Panama",
+    "difficulty": "hard"
+  },
+  {
+    "id": "PE",
+    "country": "Pérou",
+    "capital": "Lima",
+    "difficulty": "medium"
+  },
+  {
+    "id": "PG",
+    "country": "Papouasie-Nouvelle-Guinée",
+    "capital": "Port Moresby",
+    "difficulty": "hard"
+  },
+  {
+    "id": "PH",
+    "country": "Philippines",
+    "capital": "Manille",
+    "difficulty": "hard"
+  },
+  {
+    "id": "PK",
+    "country": "Pakistan",
+    "capital": "Islamabad",
+    "difficulty": "medium"
+  },
+  {
+    "id": "PL",
+    "country": "Pologne",
+    "capital": "Varsovie",
+    "difficulty": "medium"
+  },
+  {
+    "id": "PS",
+    "country": "Palestine",
+    "capital": "Ramallah",
+    "difficulty": "hard",
+    "prompt": "Quelle ville est le siège administratif de l’Autorité palestinienne ?"
+  },
+  {
+    "id": "PT",
+    "country": "Portugal",
+    "capital": "Lisbonne",
+    "difficulty": "easy"
+  },
+  {
+    "id": "PW",
+    "country": "Palaos",
+    "capital": "Ngerulmud",
+    "difficulty": "hard"
+  },
+  {
+    "id": "PY",
+    "country": "Paraguay",
+    "capital": "Asunción",
+    "difficulty": "hard"
+  },
+  {
+    "id": "QA",
+    "country": "Qatar",
+    "capital": "Doha",
+    "difficulty": "medium"
+  },
+  {
+    "id": "RO",
+    "country": "Roumanie",
+    "capital": "Bucarest",
+    "difficulty": "medium"
+  },
+  {
+    "id": "RS",
+    "country": "Serbie",
+    "capital": "Belgrade",
+    "difficulty": "medium"
+  },
+  {
+    "id": "RU",
+    "country": "Russie",
+    "capital": "Moscou",
+    "difficulty": "easy"
+  },
+  {
+    "id": "RW",
+    "country": "Rwanda",
+    "capital": "Kigali",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SA",
+    "country": "Arabie saoudite",
+    "capital": "Riyad",
+    "difficulty": "medium"
+  },
+  {
+    "id": "SB",
+    "country": "Îles Salomon",
+    "capital": "Honiara",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SC",
+    "country": "Seychelles",
+    "capital": "Victoria",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SD",
+    "country": "Soudan",
+    "capital": "Khartoum",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SE",
+    "country": "Suède",
+    "capital": "Stockholm",
+    "difficulty": "medium"
+  },
+  {
+    "id": "SG",
+    "country": "Singapour",
+    "capital": "Singapour",
+    "difficulty": "medium"
+  },
+  {
+    "id": "SI",
+    "country": "Slovénie",
+    "capital": "Ljubljana",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SK",
+    "country": "Slovaquie",
+    "capital": "Bratislava",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SL",
+    "country": "Sierra Leone",
+    "capital": "Freetown",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SM",
+    "country": "Saint-Marin",
+    "capital": "Saint-Marin",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SN",
+    "country": "Sénégal",
+    "capital": "Dakar",
+    "difficulty": "easy"
+  },
+  {
+    "id": "SO",
+    "country": "Somalie",
+    "capital": "Mogadiscio",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SR",
+    "country": "Suriname",
+    "capital": "Paramaribo",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SS",
+    "country": "Soudan du Sud",
+    "capital": "Djouba",
+    "difficulty": "hard"
+  },
+  {
+    "id": "ST",
+    "country": "São Tomé et Príncipe",
+    "capital": "São Tomé",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SV",
+    "country": "Salvador",
+    "capital": "San Salvador",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SY",
+    "country": "Syrie",
+    "capital": "Damas",
+    "difficulty": "hard"
+  },
+  {
+    "id": "SZ",
+    "country": "Eswatini",
+    "capital": "Mbabane",
+    "difficulty": "hard",
+    "prompt": "Quelle est la capitale administrative de ce pays ?"
+  },
+  {
+    "id": "TD",
+    "country": "Tchad",
+    "capital": "N'Djamena",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TG",
+    "country": "Togo",
+    "capital": "Lomé",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TH",
+    "country": "Thaïlande",
+    "capital": "Bangkok",
+    "difficulty": "easy"
+  },
+  {
+    "id": "TJ",
+    "country": "Tadjikistan",
+    "capital": "Douchanbé",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TL",
+    "country": "Timor oriental",
+    "capital": "Dili",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TM",
+    "country": "Turkménistan",
+    "capital": "Achgabat",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TN",
+    "country": "Tunisie",
+    "capital": "Tunis",
+    "difficulty": "easy"
+  },
+  {
+    "id": "TO",
+    "country": "Tonga",
+    "capital": "Nuku'alofa",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TR",
+    "country": "Turquie",
+    "capital": "Ankara",
+    "difficulty": "medium"
+  },
+  {
+    "id": "TT",
+    "country": "Trinité-et-Tobago",
+    "capital": "Port of Spain",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TV",
+    "country": "Tuvalu",
+    "capital": "Funafuti",
+    "difficulty": "hard"
+  },
+  {
+    "id": "TZ",
+    "country": "Tanzanie",
+    "capital": "Dodoma",
+    "difficulty": "hard"
+  },
+  {
+    "id": "UA",
+    "country": "Ukraine",
+    "capital": "Kyiv",
+    "difficulty": "medium"
+  },
+  {
+    "id": "UG",
+    "country": "Ouganda",
+    "capital": "Kampala",
+    "difficulty": "hard"
+  },
+  {
+    "id": "US",
+    "country": "États-Unis",
+    "capital": "Washington",
+    "difficulty": "veryEasy"
+  },
+  {
+    "id": "UY",
+    "country": "Uruguay",
+    "capital": "Montevideo",
+    "difficulty": "hard"
+  },
+  {
+    "id": "UZ",
+    "country": "Ouzbékistan",
+    "capital": "Tachkent",
+    "difficulty": "hard"
+  },
+  {
+    "id": "VA",
+    "country": "Vatican",
+    "capital": "Cité du Vatican",
+    "difficulty": "easy"
+  },
+  {
+    "id": "VC",
+    "country": "Saint-Vincent-et-les-Grenadines",
+    "capital": "Kingstown",
+    "difficulty": "hard"
+  },
+  {
+    "id": "VE",
+    "country": "Venezuela",
+    "capital": "Caracas",
+    "difficulty": "medium"
+  },
+  {
+    "id": "VN",
+    "country": "Viêt Nam",
+    "capital": "Hanoï",
+    "difficulty": "medium"
+  },
+  {
+    "id": "VU",
+    "country": "Vanuatu",
+    "capital": "Port Vila",
+    "difficulty": "hard"
+  },
+  {
+    "id": "WS",
+    "country": "Samoa",
+    "capital": "Apia",
+    "difficulty": "hard"
+  },
+  {
+    "id": "XK",
+    "country": "Kosovo",
+    "capital": "Pristina",
+    "difficulty": "hard"
+  },
+  {
+    "id": "YE",
+    "country": "Yémen",
+    "capital": "Sanaa",
+    "difficulty": "hard",
+    "prompt": "Quelle est la capitale constitutionnelle de ce pays ?"
+  },
+  {
+    "id": "ZA",
+    "country": "Afrique du Sud",
+    "capital": "Pretoria",
+    "difficulty": "medium",
+    "prompt": "Quelle est la capitale administrative de ce pays ?"
+  },
+  {
+    "id": "ZM",
+    "country": "Zambie",
+    "capital": "Lusaka",
+    "difficulty": "hard"
+  },
+  {
+    "id": "ZW",
+    "country": "Zimbabwe",
+    "capital": "Harare",
+    "difficulty": "hard"
+  }
+]

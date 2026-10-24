@@ -70,14 +70,14 @@ export class RacingRoom extends DurableObject<Env> {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url),
       now = Date.now();
+    const parsed = request.method === "POST" ? nameSchema.safeParse(
+      (await request.json<{ name?: string }>()).name,
+    ) : null;
     let room = readRoom(this.ctx.storage);
     if (room && room.expiresAt <= now)
       return Response.json({ error: "Cette salle a expiré." }, { status: 410 });
     if (request.method === "POST") {
-      const parsed = nameSchema.safeParse(
-        (await request.json<{ name?: string }>()).name,
-      );
-      if (!parsed.success)
+      if (!parsed?.success)
         return Response.json(
           { error: "Choisis un pseudo de 1 à 16 caractères." },
           { status: 400 },
@@ -92,16 +92,16 @@ export class RacingRoom extends DurableObject<Env> {
             { error: "Salle introuvable." },
             { status: 404 },
           );
-        if (room.members.length === 2)
+        if (room.members.length >= room.capacity || room.race)
           return Response.json(
             { error: "Cette salle est déjà complète." },
             { status: 409 },
           );
         room.members.push(
           member(
-            1,
+            room.members.length as PlayerId,
             parsed.data,
-            CAR_COLORS.find((color) => color !== room!.members[0].color)!,
+            CAR_COLORS.find((color) => room!.members.every((member) => member.color !== color))!,
           ),
         );
       }

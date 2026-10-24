@@ -1,4 +1,4 @@
-import { CAR_COLORS, type LapCount } from "../src/engine/config";
+import { CAR_COLORS, type LapCount, type PlayerCount } from "../src/engine/config";
 import {
   NETWORK,
   type ActionResult,
@@ -16,8 +16,10 @@ export interface Member {
 }
 import type { GameMode } from "../src/engine/questions";
 export interface Room {
+  capacity: PlayerCount;
   laps: LapCount;
   mode: GameMode;
+  themes: GameMode[];
   code: string;
   members: Member[];
   revision: number;
@@ -25,7 +27,7 @@ export interface Room {
   race: RaceState | null;
   raceId: string | null;
   startsAt: number | null;
-  disconnectedAt: [number | null, number | null];
+  disconnectedAt: (number | null)[];
   receipts: { playerId: PlayerId; ack: ActionResult }[];
   reason: "finish" | "forfeit" | "interrupted" | null;
 }
@@ -43,7 +45,9 @@ export const member = (
 });
 export const makeRoom = (code: string, name: string, now: number): Room => ({
   code,
+  capacity: 2,
   mode: "math",
+  themes: ["math"],
   laps: 3,
   members: [member(0, name)],
   revision: 0,

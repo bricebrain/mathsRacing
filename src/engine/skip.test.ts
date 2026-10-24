@@ -49,13 +49,15 @@ describe("Passer un calcul sans avantage de vitesse", () => {
     expect(state.players[0].skipped).toBe(1);
     expect(boostAt(state.players[0], 8500)).toBeGreaterThan(0);
   });
-  it("collecte les calculs à revoir sans doublons après erreurs puis passage", () => {
+  it("ignore les doubles tentatives et le passage pendant la correction", () => {
     const state = createRace(20);
     submit(state, 0, "999", 0, 1000);
-    submit(state, 0, "999", 0, 1500);
-    skipOperation(state, 0, 0, 8000);
+    expect(submit(state, 0, "999", 0, 1500)).toBe("ignored");
+    expect(skipOperation(state, 0, 0, 2000)).toBe(false);
+    expect(skipOperation(state, 0, 0, 8000)).toBe(false);
     expect(state.players[0].reviewIds).toEqual([0]);
-    expect(state.players[0].errors).toBe(2);
+    expect(state.players[0].errors).toBe(1);
+    expect(state.players[0].index).toBe(1);
   });
   it("offre les mêmes règles aux deux joueurs et interdit le passage après arrivée", () => {
     const state = createRace(20);

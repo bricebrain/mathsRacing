@@ -1,14 +1,15 @@
-import type { CAR_COLORS, LapCount } from "../engine/config";
+import type { CAR_COLORS, LapCount, PlayerCount } from "../engine/config";
 import type { Racer } from "../engine/race";
 import type { GameMode, Question } from "../engine/questions";
-export type PlayerId = 0 | 1;
+export type PlayerId = 0 | 1 | 2 | 3;
 export type Phase = "lobby" | "countdown" | "racing" | "finished";
 export type PublicRacer = Omit<Racer, "reviewIds" | "lastAttempt">;
 export interface DisplayRace {
   laps: LapCount;
-  players: [PublicRacer, PublicRacer];
+  players: PublicRacer[];
   time: number;
   winner: number | null;
+  winners: number[];
 }
 export interface MemberView {
   id: PlayerId;
@@ -22,7 +23,16 @@ export interface Review {
   operation: Question;
   answer: number | string;
 }
+export interface Correction {
+  operationId: number;
+  answer: string;
+  choice: number | null;
+  until: number;
+}
 export interface RoomView {
+  capacity: PlayerCount;
+  themes: GameMode[];
+  correction: Correction | null;
   mode: GameMode;
   code: string;
   selfId: PlayerId;
@@ -52,7 +62,10 @@ export type ClientAction =
   | { type: "auth"; token: string; clientId: string; takeover?: boolean }
   | { type: "ping"; sentAt: number }
   | { type: "ready"; ready: boolean }
+  | { type: "capacity"; capacity: PlayerCount }
   | { type: "laps"; laps: LapCount }
+  | { type: "theme"; theme: GameMode; selected: boolean }
+  | { type: "themes"; themes: GameMode[] }
   | { type: "mode"; mode: GameMode }
   | { type: "color"; color: CarColor }
   | { type: "rematch"; ready: boolean }

@@ -1,8 +1,9 @@
+import { Box } from "@mui/material";
 import { DIFFICULTIES, RACE } from "../engine/config";
 import { boostAt, skipRemaining } from "../engine/race";
-import type { DisplayRace } from "../shared/protocol";
-import { isCapital, type Question } from "../engine/questions";
-import { CapitalChoices } from "./CapitalChoices";
+import type { DisplayRace, Correction } from "../shared/protocol";
+import { isChoice, type Question } from "../engine/questions";
+import { QuestionChoices } from "./QuestionChoices";
 import { Keypad } from "./Keypad";
 export function CalculationPanel({
   state,
@@ -13,8 +14,10 @@ export function CalculationPanel({
   onKey,
   onSkip,
   onChoose,
+  correction,
 }: {
   state: DisplayRace;
+  correction: Correction | null;
   operation: Question | null;
   input: string;
   feedback: string;
@@ -24,8 +27,9 @@ export function CalculationPanel({
   onChoose: (index: number) => void;
 }) {
   const player = state.players[0];
-  const capital = operation && isCapital(operation) ? operation : null;
-  const calculation = operation && !isCapital(operation) ? operation : null;
+  const eliminated = player.eliminatedAt != null;
+  const choice = operation && isChoice(operation) ? operation : null;
+  const calculation = operation && !isChoice(operation) ? operation : null;
   const difficulty = DIFFICULTIES[operation?.difficulty ?? "veryEasy"],
     turbo = boostAt(player, state.time);
   const remaining = Math.max(
@@ -39,13 +43,17 @@ export function CalculationPanel({
   return (
     <section className={`control-panel calculation-panel ${feedback}`}>
       <div className="question-heading">
-        <span className="eyebrow">À TOI DE JOUER</span>
+        <span className="boost-value">+{difficulty.boost * 100} %</span>
         <span className="difficulty" style={{ color: difficulty.color }}>
           <i /> {difficulty.label}
         </span>
       </div>
-      {capital ? (
-        <CapitalChoices question={capital} active={active} onChoose={onChoose} />
+      {eliminated ? (
+        <Box role="status" sx={{ my: 3, color: "#ffda9c", fontSize: 14, lineHeight: 1.6 }}>
+          Tu es en abandon après une déconnexion prolongée. Les autres pilotes continuent la course.
+        </Box>
+      ) : choice ? (
+        <QuestionChoices question={choice} active={active} correction={correction} onChoose={onChoose} />
       ) : <div className="question">
         <span>
           {calculation?.a ?? "—"} <em>{calculation?.operator ?? "+"}</em>{" "}
@@ -53,15 +61,17 @@ export function CalculationPanel({
         </span>
         <span className="equals">=</span>
         <output aria-label="Réponse saisie">
-          {input || <span className="input-caret">?</span>}
+          {correction?.answer ?? (input || <span className="input-caret">?</span>)}
         </output>
       </div>}
       <div className="answer-actions">
         <div className="answer-feedback" aria-live="polite">
-          {feedback === "correct" ? (
+          {correction ? (
+            <>Bonne réponse : <strong>{correction.answer}</strong> · {Math.max(0, Math.ceil((correction.until - state.time) / 1000))} s</>
+          ) : feedback === "correct" ? (
             "✓ Bien joué ! Turbo enclenché."
           ) : feedback === "wrong" ? (
-            "Presque ! Essaie encore."
+            "Correction…"
           ) : feedback === "skipped" ? (
             "Question passée, sans nouveau turbo."
           ) : feedback === "pending" ? (
@@ -69,22 +79,18 @@ export function CalculationPanel({
           ) : feedback === "ignored" ? (
             "Attends un instant puis réessaie."
           ) : (
-            <>
-              Une bonne réponse ={" "}
-              <strong>+{difficulty.boost * 100} % de vitesse</strong>
-            </>
+            null
           )}
         </div>
         <button
           className="skip-button"
           onClick={onSkip}
           disabled={!active || skipWait > 0}
-          title="Passer après 8 secondes, sans nouveau boost. La question sera à revoir à l’arrivée."
         >
           {skipWait > 0 ? `Passer · ${skipWait} s` : "Passer →"}
         </button>
       </div>
-      {!capital && <Keypad onKey={onKey} disabled={!active} />}
+      {!eliminated && !choice && <Keypad onKey={onKey} disabled={!active} />}
       <div className={`turbo-gauge ${turbo ? "boosting" : ""}`}>
         <div>
           <span>ϟ TURBO {turbo ? "ACTIF" : "EN ATTENTE"}</span>
@@ -97,11 +103,7 @@ export function CalculationPanel({
             style={{ width: `${(remaining / RACE.boostDuration) * 100}%` }}
           />
         </div>
-        <small>
-          {turbo
-            ? `${(remaining / 1000).toFixed(1)} s de boost`
-            : "Chaque bonne réponse relance 3 secondes de boost"}
-        </small>
+
       </div>
       <div className="personal-stats">
         <span>
@@ -111,10 +113,6 @@ export function CalculationPanel({
           <strong>{Math.round(RACE.baseSpeed * (1 + turbo) * 3.6)}</strong> km/h
         </span>
       </div>
-      <p className="keyboard-hint">
-        {capital ? "Choisis une capitale · Clavier : touches 1 à 4"
-          : "Clavier : chiffres · Entrée pour valider · ⌫ pour effacer"}
-      </p>
     </section>
   );
 }

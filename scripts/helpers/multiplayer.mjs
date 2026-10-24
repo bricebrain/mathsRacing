@@ -9,9 +9,9 @@ export async function until(predicate, timeout = 12000) {
   }
   throw Error("Condition multijoueur non satisfaite dans le délai attendu");
 }
-export async function driver(browser, name, code = "") {
-  const context = await browser.newContext(),
-    page = await context.newPage({ viewport: { width: 390, height: 844 } });
+export async function driver(browser, name, code = "", savedSession = null) {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } }),
+    page = await context.newPage();
   const state = { view: null, acks: [], errors: [], sent: [], audio: [] };
   await page.addInitScript(() => {
     const Native = window.WebSocket;
@@ -63,13 +63,18 @@ export async function driver(browser, name, code = "") {
       } catch {}
     });
   });
+  if (savedSession) await page.addInitScript((session) => {
+    localStorage.setItem(`mr:session:${session.code}`, JSON.stringify(session));
+  }, savedSession);
   await page.goto(`${base}${code ? `/room/${code}` : "/"}`);
+  if (!savedSession) {
   await page.getByLabel("Ton pseudo").fill(name);
   await page
     .getByRole("button", {
       name: code ? "Rejoindre la salle" : "Créer une salle",
     })
     .click();
+  }
   await until(() => state.view?.members.some((member) => member.name === name));
   return { context, page, state };
 }
