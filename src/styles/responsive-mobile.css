@@ -1,0 +1,233 @@
+@media (max-width: 700px) {
+  .site-header {
+    height: 56px;
+    padding: 0 18px;
+  }
+  .brand svg {
+    width: 30px;
+  }
+  .brand > span {
+    font-size: 14px;
+  }
+  .local-status {
+    font-size: 8px;
+    letter-spacing: 0.8px;
+  }
+  .header-right {
+    gap: 8px;
+  }
+  .version {
+    display: none;
+  }
+  main {
+    padding: 20px 14px 0;
+  }
+  .page-heading {
+    margin-bottom: 17px;
+  }
+  .page-heading .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+  h1 {
+    font-size: 26px;
+    margin-top: 7px;
+    letter-spacing: -1px;
+  }
+  .session-tag {
+    display: none;
+  }
+  .game-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .circuit-card,
+  .control-panel {
+    width: 100%;
+    border-radius: 12px;
+  }
+  .circuit-topbar {
+    height: 36px;
+    padding: 0 13px;
+    font-size: 9px;
+  }
+  .circuit-subtitle {
+    font-size: 8px;
+  }
+  .circuit-topbar > span {
+    font-size: 7px;
+  }
+  .scoreboard {
+    padding: 11px 13px;
+    gap: 16px;
+  }
+  .position {
+    font-size: 23px;
+    min-width: 28px;
+  }
+  .score-driver {
+    gap: 7px;
+  }
+  .driver-progress > div:first-child {
+    font-size: 9px;
+    margin-bottom: 8px;
+    gap: 5px;
+  }
+  .driver-progress small {
+    display: none;
+  }
+  .race-clock {
+    padding-left: 10px;
+  }
+  .race-clock strong {
+    font-size: 15px;
+  }
+  .race-clock span {
+    font-size: 6px;
+  }
+  .track-footer {
+    height: 32px;
+    padding: 0 13px;
+    font-size: 8px;
+  }
+  .track-footer > span:last-child {
+    font-size: 6px;
+  }
+  .track-caption {
+    left: 14px;
+    bottom: 14px;
+    padding: 9px 13px;
+    gap: 10px;
+  }
+  .track-number {
+    font-size: 32px;
+    padding-right: 12px;
+  }
+  .track-caption .eyebrow {
+    display: none;
+  }
+  .track-caption strong {
+    font-size: 18px;
+  }
+  .track-caption > div > span:last-child {
+    font-size: 8px;
+  }
+  .control-panel {
+    padding: 21px;
+  }
+  .lobby-panel h2 {
+    font-size: 27px;
+  }
+  .lobby-panel h2 br {
+    display: none;
+  }
+  .driver-card {
+    margin-top: 16px;
+  }
+  .opponent {
+    margin-bottom: 20px;
+  }
+  .how-to {
+    margin-top: 19px;
+  }
+  .page-footer {
+    font-size: 8px;
+    padding: 18px 2px 22px;
+  }
+  .page-footer > span:last-child {
+    display: none;
+  }
+  .phase-countdown main,
+  .phase-racing main {
+    padding-top: 10px;
+  }
+  .phase-countdown .page-heading,
+  .phase-racing .page-heading {
+    display: none;
+  }
+  .calculation-panel {
+    padding: 15px 18px;
+  }
+  .question {
+    margin: 12px 0 5px;
+    font-size: 33px;
+    gap: 15px;
+  }
+  .question output {
+    min-height: 43px;
+  }
+  .answer-feedback {
+    min-height: 25px;
+    font-size: 10px;
+  }
+  .keypad {
+    gap: 7px;
+  }
+  .keypad button {
+    height: 48px;
+    font-size: 22px;
+    border-radius: 7px;
+  }
+  .turbo-gauge {
+    margin-top: 13px;
+    padding: 10px 12px;
+  }
+  .turbo-gauge small {
+    display: none;
+  }
+  .turbo-gauge > div:first-child {
+    margin-bottom: 8px;
+  }
+  .personal-stats {
+    margin-top: 11px;
+  }
+  .calculation-panel > .keyboard-hint {
+    display: none;
+  }
+  .phase-racing .page-footer,
+  .phase-countdown .page-footer {
+    display: none;
+  }
+  .countdown-overlay strong {
+    font-size: 95px;
+  }
+  .countdown-overlay p {
+    font-size: 10px;
+  }
+  .result-card {
+    padding: 23px;
+  }
+  .result-card h2 {
+    font-size: 25px;
+  }
+  .result-card table {
+    font-size: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .scoreboard {
+    gap: 10px;
+  }
+  .score-driver {
+    gap: 5px;
+  }
+  .position {
+    min-width: 24px;
+    font-size: 22px;
+  }
+  .driver-progress {
+    min-width: 0;
+  }
+  .driver-progress > div:first-child {
+    font-size: 8px;
+    gap: 4px;
+  }
+  .driver-progress strong {
+    gap: 4px;
+  }
+  .driver-progress i {
+    width: 4px;
+    height: 4px;
+  }
+}

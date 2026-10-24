@@ -1,0 +1,59 @@
+@media (min-width: 1600px) {
+  main {
+    padding-top: 50px;
+  }
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr) 370px;
+  }
+  .control-panel {
+    padding: 30px;
+  }
+  .keypad button {
+    height: 65px;
+  }
+}
+@media (max-width: 1100px) and (min-width: 701px) {
+  main {
+    padding: 27px 24px 0;
+  }
+  .site-header {
+    padding: 0 24px;
+  }
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 16px;
+  }
+  .control-panel {
+    padding: 20px;
+  }
+  .scoreboard {
+    gap: 12px;
+    padding: 15px;
+  }
+  .race-clock {
+    display: none;
+  }
+  .track-caption {
+    bottom: 15px;
+    left: 15px;
+    padding: 10px;
+  }
+  .track-caption .eyebrow {
+    display: none;
+  }
+  .circuit-topbar {
+    padding: 0 15px;
+  }
+  .circuit-topbar > span {
+    display: none;
+  }
+  .track-number {
+    font-size: 35px;
+  }
+  .track-caption strong {
+    font-size: 19px;
+  }
+  .track-caption > div > span:last-child {
+    font-size: 8px;
+  }
+}

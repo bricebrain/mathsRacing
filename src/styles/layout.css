@@ -1,0 +1,99 @@
+.site-header {
+  height: 88px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5vw;
+}
+.brand {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+.brand svg {
+  width: 40px;
+  height: 36px;
+  color: var(--lime);
+}
+.brand > span {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+  font-style: italic;
+}
+.brand > span > span {
+  color: var(--lime);
+  margin-left: 3px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.local-status {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  color: #b3c0b8;
+  font-weight: 650;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.local-status i,
+.ready-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--lime);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 10px #b5ef6340;
+}
+.version {
+  font-size: 11px;
+  color: #758680;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+main {
+  max-width: 1500px;
+  padding: 37px 5vw 0;
+  margin: auto;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #a4b2a5;
+  font-weight: 700;
+}
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 29px;
+}
+h1 {
+  font-size: 36px;
+  letter-spacing: -1.3px;
+  margin: 8px 0 0;
+  font-weight: 750;
+}
+.session-tag {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #8c9c98;
+}
+.session-tag b {
+  background: #25332f;
+  color: var(--lime);
+  padding: 7px 8px;
+  margin-left: 12px;
+  border-radius: 4px;
+}
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 344px;
+  gap: 24px;
+  align-items: start;
+}

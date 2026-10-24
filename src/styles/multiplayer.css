@@ -1,0 +1,115 @@
+.session-entry h2 {
+  font-size: 27px;
+  letter-spacing: -0.8px;
+}
+.session-entry form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 0;
+}
+.session-entry label,
+.invite-box label {
+  font-size: 11px;
+  color: #abbbae;
+}
+.session-entry input,
+.invite-box input {
+  width: 100%;
+  background: #101e22;
+  color: #eff4e8;
+  border: 1px solid #ffffff20;
+  border-radius: 7px;
+  padding: 13px;
+  font: inherit;
+  font-size: 14px;
+}
+.session-entry input:focus,
+.invite-box input:focus {
+  outline: 2px solid var(--lime);
+  outline-offset: 2px;
+}
+.entry-divider {
+  text-align: center;
+  font-size: 10px;
+  color: #809988;
+  margin: 8px 0;
+}
+.secondary-button {
+  width: 100%;
+  border: 1px solid #b5ef6340;
+  background: #b5ef630c;
+  border-radius: 8px;
+  color: var(--lime);
+  padding: 13px;
+  font-size: 12px;
+  font-weight: 650;
+}
+.secondary-button:hover {
+  background: #b5ef631c;
+}
+.invite-box {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 20px;
+}
+.invite-box input {
+  font-size: 11px;
+  padding: 10px;
+}
+.invite-box p {
+  font-size: 10px;
+  color: var(--lime);
+  margin: 0;
+}
+.connection-notice {
+  border: 1px solid #ffc66d44;
+  background: #ffc66d0b;
+  color: #ffda9c;
+  font-size: 12px;
+  padding: 12px 15px;
+  border-radius: 9px;
+  margin: 0 0 15px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.connection-notice button {
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  padding: 7px 10px;
+  color: inherit;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.room-error {
+  font-size: 12px;
+  color: #ff967b;
+  line-height: 1.5;
+}
+.driver-name {
+  display: inline-block;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .driver-name {
+    max-width: 44px;
+  }
+  .connection-notice {
+    font-size: 10px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+  }
+  .session-entry input {
+    font-size: 16px;
+  }
+  .lobby-panel h2 {
+    font-size: 26px;
+  }
+}
