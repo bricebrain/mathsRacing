@@ -2,27 +2,26 @@ import Phaser from "phaser";
 export const WORLD = { width: 1000, height: 640 };
 // La même abscisse curviligne pilote les deux voies : le décalage reste visuel.
 export function createTrack() {
+  // Tracé en « 8 » : les deux diagonales centrales se croisent vers (516,320),
+  // la première passe sur un pont, la seconde passe dessous.
   const controls = [
-    [430, 545],
-    [230, 545],
-    [125, 475],
-    [115, 325],
-    [130, 180],
-    [235, 105],
-    [400, 105],
-    [490, 155],
-    [490, 245],
-    [605, 270],
-    [700, 205],
-    [765, 105],
-    [865, 140],
-    [900, 255],
-    [875, 370],
-    [785, 450],
-    [680, 470],
-    [600, 400],
-    [545, 410],
-    [530, 505],
+    [430, 548],
+    [230, 548],
+    [95, 480],
+    [90, 325],
+    [110, 175],
+    [235, 85],
+    [400, 85],
+    [460, 205],
+    [570, 430],
+    [620, 490],
+    [745, 500],
+    [895, 430],
+    [920, 255],
+    [890, 130],
+    [780, 85],
+    [575, 205],
+    [460, 430],
   ];
   const points = controls.map(([x, y]) => new Phaser.Math.Vector2(x, y));
   const curve = new Phaser.Curves.Spline([

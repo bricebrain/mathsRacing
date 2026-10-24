@@ -47,6 +47,11 @@ export class TurboEffects {
       })
       .setDepth(2);
   }
+  /** Replace la flamme et l'émetteur dans la pile de profondeurs (pont). */
+  setDepth(depth: number) {
+    this.flame.setDepth(depth + 0.4);
+    this.emitter.setDepth(depth);
+  }
   update(pose: Pose, turbo: number, time: number, reducedMotion: boolean) {
     const rearX = pose.x - Math.cos(pose.angle) * 30,
       rearY = pose.y - Math.sin(pose.angle) * 30;

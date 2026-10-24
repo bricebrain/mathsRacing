@@ -1,6 +1,13 @@
 import Phaser from "phaser";
 import { WORLD, type Track } from "./track";
-import { drawTrackSurface, findCorners } from "./trackSurface";
+import {
+  drawBridgeDeck,
+  drawTrackSurface,
+  findBridge,
+  findCorners,
+  findStraits,
+  trackClearance,
+} from "./trackSurface";
 export function createScenery(scene: Phaser.Scene, track: Track) {
   const texture = scene.textures.createCanvas(
     "circuit",
@@ -80,19 +87,24 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
 
   const path = drawTrackSurface(ctx, track, random);
 
-  // Murs de pneus à l'extérieur des virages, sauf où des glissières existent.
+  // Murs de pneus à l'extérieur des virages, sauf où des glissières existent
+  // ou où une autre portion de piste passe à proximité.
   const corners = findCorners(track);
+  const straits = findStraits(track);
+  const clear = trackClearance(track);
+  const inRange = (t: number, from: number, to: number) =>
+    (t >= from && t <= to) || (to > 1 && t + 1 >= from && t + 1 <= to);
+  const railed = (t: number, side: number) =>
+    straits.some((s) => s.side === side && inRange(t, s.from - 0.02, s.to + 0.02));
   const tiresRed = sprite("asset-tires-red"),
     tiresWhite = sprite("asset-tires-white");
-  const railed = (t: number, side: number) =>
-    (side === 1 && t > 0.05 && t < 0.29) ||
-    (side === -1 && t > 0.63 && t < 0.76);
   if (tiresRed && tiresWhite)
     for (const corner of corners) {
       if (railed(corner.t, corner.side)) continue;
       for (let k = 0; k < 5; k++) {
         const t = corner.t - 0.018 + k * 0.013;
         const p = track.sample(t, corner.side * 70);
+        if (!clear(t, p.x, p.y, 74)) continue;
         ctx.fillStyle = "#0e1f1a38";
         ctx.beginPath();
         ctx.ellipse(p.x + 3, p.y + 4, 15, 13, 0, 0, Math.PI * 2);
@@ -111,6 +123,7 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
         [corner.t - 0.034, 0.34],
       ] as const) {
         const p = track.sample(t, corner.side * 80);
+        if (!clear(t, p.x, p.y, 80)) continue;
         const q = track.sample(t + 0.01, corner.side * 80);
         const forward = Math.atan2(q.y - p.y, q.x - p.x);
         drawSprite(
@@ -132,6 +145,7 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
       [0.04, "50"],
     ] as const) {
       const p = track.sample(corner.t - dt, corner.side * 72);
+      if (!clear(corner.t - dt, p.x, p.y, 78)) continue;
       ctx.fillStyle = "#0e1f1a30";
       ctx.beginPath();
       ctx.ellipse(p.x + 2, p.y + 3, 10, 8, 0, 0, Math.PI * 2);
@@ -193,8 +207,7 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
   ctx.lineWidth = 175;
   const blocked = (x: number, y: number) =>
     ctx.isPointInStroke(path, x, y) ||
-    (x > 200 && x < 500 && y > 245 && y < 415) ||
-    (x > 600 && x < 745 && y > 290 && y < 355) ||
+    (x > 155 && x < 405 && y > 185 && y < 315) ||
     (x > 240 && x < 470 && y > 595);
   let planted = 0;
   for (let i = 0; i < 400 && planted < 62; i++) {
@@ -217,43 +230,19 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
     planted++;
   }
 
-  // Tribune : sprite avec spectateurs, ombre portée et toit discret.
+  // Tribune : sprite avec spectateurs, repliée dans le haut de l'intérieur.
   const tribune = sprite("asset-tribune");
   if (tribune) {
     ctx.save();
-    ctx.translate(325, 331);
+    ctx.translate(280, 250);
     ctx.rotate(-0.05);
     ctx.fillStyle = "#172d2c40";
     ctx.beginPath();
     ctx.roundRect(-122, -58, 244, 128, 8);
     ctx.fill();
     ctx.restore();
-    drawSprite(tribune, 325, 331, 0.54, -0.05);
+    drawSprite(tribune, 280, 250, 0.54, -0.05);
   }
-
-  // Écran géant du sponsor, pied et encadrement lumineux.
-  ctx.save();
-  ctx.translate(670, 323);
-  ctx.rotate(0.05);
-  ctx.fillStyle = "#172d2c40";
-  ctx.fillRect(-70, -20, 160, 62);
-  ctx.fillStyle = "#12261f";
-  ctx.fillRect(-84, 36, 8, 22);
-  ctx.fillRect(76, 36, 8, 22);
-  ctx.fillStyle = "#14332b";
-  ctx.beginPath();
-  ctx.roundRect(-80, -30, 160, 60, 6);
-  ctx.fill();
-  ctx.strokeStyle = "#9ecf7f55";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.font = "italic 900 21px Arial";
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#c5ec8c";
-  ctx.fillText("MATH RACING", 0, 5);
-  ctx.fillStyle = "#f4f9e8";
-  ctx.fillRect(-58, 14, 116, 3);
-  ctx.restore();
 
   // Pit lane : béton, places délimitées, cônes et panneau.
   ctx.fillStyle = "#3b5449";
@@ -279,14 +268,27 @@ export function createScenery(scene: Phaser.Scene, track: Track) {
   if (tentRed && tentBlue) {
     for (const [img, x] of [
       [tentRed, 236],
-      [tentBlue, 428],
+      [tentBlue, 350],
     ] as const) {
       ctx.fillStyle = "#172d2c35";
       ctx.beginPath();
-      ctx.ellipse(x + 8, 448, 34, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + 8, 452, 34, 20, 0, 0, Math.PI * 2);
       ctx.fill();
-      drawSprite(img, x, 436, 0.26, 0.08);
+      drawSprite(img, x, 440, 0.26, 0.08);
     }
+  }
+
+  // Calque du pont au-dessus des voitures : elles passent dessous.
+  const bridge = findBridge(track);
+  if (bridge) {
+    const deck = scene.textures.createCanvas(
+      "bridge-deck",
+      WORLD.width,
+      WORLD.height,
+    )!;
+    drawBridgeDeck(deck.getContext(), track, bridge);
+    deck.refresh();
+    scene.add.image(0, 0, "bridge-deck").setOrigin(0).setDepth(5);
   }
 
   // Vignette discrète pour donner de la profondeur à la scène.

@@ -3,6 +3,7 @@ import { RACE } from "../engine/config";
 import { boostAt } from "../engine/race";
 import type { DisplayRace, PlayerId } from "../shared/protocol";
 import { createTrack } from "./track";
+import { findBridge, type Bridge } from "./trackSurface";
 import { createScenery } from "./scenery";
 import {
   createCarTexture,
@@ -26,6 +27,7 @@ export class RacingScene extends Phaser.Scene {
   private reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
     .matches;
   private carColor = "";
+  private bridge: Bridge | null = null;
   constructor(private read: () => RenderSource) {
     super("race");
   }
@@ -34,6 +36,7 @@ export class RacingScene extends Phaser.Scene {
       this.load.image(key, url);
   }
   create() {
+    this.bridge = findBridge(this.track);
     createScenery(this, this.track);
     createGlowTexture(this);
     createShadowTexture(this);
@@ -56,12 +59,17 @@ export class RacingScene extends Phaser.Scene {
             padding: { x: 6, y: 3 },
           })
           .setOrigin(0.5)
-          .setDepth(4),
+          .setDepth(8),
       );
     });
     this.game.canvas.setAttribute(
       "aria-label",
       "Circuit Les Pins : deux voitures vues du dessus sur une piste fermée",
+    );
+    // Sonde temporaire de diagnostic (retirée après vérification).
+    this.game.canvas.setAttribute(
+      "data-bridge",
+      JSON.stringify(this.bridge),
     );
     this.game.canvas.setAttribute("role", "img");
   }
@@ -92,6 +100,14 @@ export class RacingScene extends Phaser.Scene {
         ids[i] === 1 ? -17 : 17,
       );
       const turbo = active ? boostAt(p, state.time) : 0;
+      // Sur le pont, la voiture passe au-dessus du calque ; dessous, elle disparaît
+      // sous le tablier.
+      const t = (((p.distance / RACE.lapLength) % 1) + 1) % 1;
+      const elevated =
+        !!this.bridge && t >= this.bridge.from && t <= this.bridge.to;
+      this.cars[i].setDepth(elevated ? 6 : 3);
+      this.shadows[i].setDepth(elevated ? 4.5 : 1);
+      this.effects[i].setDepth(elevated ? 5.5 : 2);
       this.cars[i].setPosition(pos.x, pos.y).setRotation(pos.angle);
       this.labels[i]
         .setPosition(pos.x, pos.y - 31)
